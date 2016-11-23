@@ -46,7 +46,7 @@ class FoaasOperation: JSONConvertible/*, DataConvertible*/{
     
     required init?(data: Data) {
     //next to do
-        let json = try JSONSerialization.jsonObject(with: data, options: [])
+        //let json = try JSONSerialization.jsonObject(with: data, options: [])
         
     }
     //    func toData() throws -> Data{
