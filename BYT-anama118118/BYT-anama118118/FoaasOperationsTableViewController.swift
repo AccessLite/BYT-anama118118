@@ -10,22 +10,23 @@ import UIKit
 
 class FoaasOperationsTableViewController: UITableViewController {
     var endpoint = "http://www.foaas.com/operations"
+    var endpointForFoaas = URL(string: "http://www.foaas.com/awesome/louis")!
     
     var foaasOperationsArray = [FoaasOperation]()
+    var foass: Foaas?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        APIRequestManager.getData(endpoint: endpoint) { (data: Data?) in
-            guard let validData = data else {return}
-            
-            guard let validFoaasOperationsArray = FoaasOperation(data: validData)?.FoassOperations else {return}
-            
-            self.foaasOperationsArray = validFoaasOperationsArray
-            
+        FoaasAPIManager.getOperations { (arrayOfFoaasOperation: [FoaasOperation]?) in
+            guard let validArrayOfFoaasOperation = arrayOfFoaasOperation else {return}
+            self.foaasOperationsArray = validArrayOfFoaasOperation
             dump(self.foaasOperationsArray)
-            //dump(validData)
-            
+        }
+        
+        FoaasAPIManager.getFoaas(url: endpointForFoaas) { (foaas: Foaas?) in
+            self.foass = foaas
+            dump(self.foass)
         }
         
         // Uncomment the following line to preserve selection between presentations

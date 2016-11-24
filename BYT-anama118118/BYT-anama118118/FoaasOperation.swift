@@ -19,6 +19,7 @@ class FoaasOperation: JSONConvertible/*, DataConvertible*/{
     var url: String = ""
     var fields: [FoaasField] = []
     var FoassOperations: [FoaasOperation] = []
+    static var endPoint = URL(string:"http://www.foaas.com/operations")!
     
     required init?(json: [String : AnyObject]){
         guard let name = json["name"] as? String,
@@ -51,7 +52,6 @@ class FoaasOperation: JSONConvertible/*, DataConvertible*/{
     }
     
     required init? (data: Data){
-        //next to do
         do {
     
             let json = try JSONSerialization.jsonObject(with: data, options: [])

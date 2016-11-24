@@ -9,6 +9,10 @@
 import Foundation
 import UIKit
 
+enum FoaasFieldModelParseError: Error {
+    case validJson
+}
+
 class FoaasField: JSONConvertible, CustomStringConvertible {
     var name: String
     var field: String
