@@ -14,7 +14,7 @@ enum FoaasOperationModelParseError: Error {
     case validFoaasOperation
 }
 
-class FoaasOperation: JSONConvertible/*, DataConvertible*/{
+class FoaasOperation: JSONConvertible, DataConvertible{
     var name: String = ""
     var url: String = ""
     var fields: [FoaasField] = []
@@ -44,7 +44,6 @@ class FoaasOperation: JSONConvertible/*, DataConvertible*/{
             let foaasFieldJson = FoaasField.toJson(field)
             fieldJson.append(foaasFieldJson())
         }
-        
         return ["name": self.name as AnyObject,
                 "url": self.url as AnyObject,
                 "fields": fieldJson as AnyObject
@@ -53,30 +52,35 @@ class FoaasOperation: JSONConvertible/*, DataConvertible*/{
     
     required init? (data: Data){
         do {
-    
             let json = try JSONSerialization.jsonObject(with: data, options: [])
-            
             guard let dict = json as? [[String: AnyObject]] else {
                 throw FoaasOperationModelParseError.validJson
             }
-            
-           try dict.forEach({ (item) in
+            try dict.forEach({ (item) in
                 guard let validFoaasOperation = FoaasOperation(json: item) else {
                     throw FoaasOperationModelParseError.validFoaasOperation
                 }
                 self.FoassOperations.append(validFoaasOperation)
             })
-            
         }catch FoaasOperationModelParseError.validJson {
             print("Pring error in parsing validJson")
         } catch {
             print(error)
         }
-        
     }
-    //    func toData() throws -> Data{
-    //        return
-    //    }
+    func toData() throws -> Data{
+        let foaasOperationBody : [String: Any] =  ["name": self.name,
+        "url": self.url,
+        "fields": self.fields]
+        var foaasOperationData: Data = Data()
+        do {
+            foaasOperationData = try JSONSerialization.data(withJSONObject: foaasOperationBody, options: [])
+        }
+        catch {
+            print(error)
+        }
+        return foaasOperationData
+    }
 }
 
 //Endpoint: /operations
