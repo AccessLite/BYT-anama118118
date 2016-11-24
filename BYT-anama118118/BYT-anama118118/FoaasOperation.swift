@@ -9,10 +9,16 @@
 import Foundation
 import UIKit
 
+enum FoaasOperationModelParseError: Error {
+    case validJson
+    case validFoaasOperation
+}
+
 class FoaasOperation: JSONConvertible/*, DataConvertible*/{
     var name: String = ""
     var url: String = ""
     var fields: [FoaasField] = []
+    var FoassOperations: [FoaasOperation] = []
     
     required init?(json: [String : AnyObject]){
         guard let name = json["name"] as? String,
@@ -41,12 +47,31 @@ class FoaasOperation: JSONConvertible/*, DataConvertible*/{
         return ["name": self.name as AnyObject,
                 "url": self.url as AnyObject,
                 "fields": fieldJson as AnyObject
-                ]
+        ]
     }
     
-    required init?(data: Data) {
-    //next to do
-        //let json = try JSONSerialization.jsonObject(with: data, options: [])
+    required init? (data: Data){
+        //next to do
+        do {
+    
+            let json = try JSONSerialization.jsonObject(with: data, options: [])
+            
+            guard let dict = json as? [[String: AnyObject]] else {
+                throw FoaasOperationModelParseError.validJson
+            }
+            
+           try dict.forEach({ (item) in
+                guard let validFoaasOperation = FoaasOperation(json: item) else {
+                    throw FoaasOperationModelParseError.validFoaasOperation
+                }
+                self.FoassOperations.append(validFoaasOperation)
+            })
+            
+        }catch FoaasOperationModelParseError.validJson {
+            print("Pring error in parsing validJson")
+        } catch {
+            print(error)
+        }
         
     }
     //    func toData() throws -> Data{

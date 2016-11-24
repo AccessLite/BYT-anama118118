@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 class FoaasField: JSONConvertible, CustomStringConvertible {
-    var name: String = ""
-    var field: String = ""
+    var name: String
+    var field: String
     
     public var description: String {
         get{
@@ -24,12 +24,14 @@ class FoaasField: JSONConvertible, CustomStringConvertible {
             let field = json["field"] as? String{
             self.name = name
             self.field = field
+        } else {
+            return nil
         }
     }
     
     func toJson() -> [String : AnyObject]{
         return ["name": self.name as AnyObject,
-                "field": self.name as AnyObject]
+                "field": self.field as AnyObject]
     }
     
 }

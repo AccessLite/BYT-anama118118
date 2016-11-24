@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 class Foaas: JSONConvertible, CustomStringConvertible{
-    var message: String = ""
-    var subtitle: String = ""
+    var message: String
+    var subtitle: String
     
     public var description: String {
         get{
@@ -20,10 +20,12 @@ class Foaas: JSONConvertible, CustomStringConvertible{
     }
     
     required init?(json: [String : AnyObject]){
-       if let message = json["message"] as? String,
-        let subtitle = json["subtitle"] as? String {
-        self.message = message
-        self.subtitle = subtitle
+        if let message = json["message"] as? String,
+            let subtitle = json["subtitle"] as? String {
+            self.message = message
+            self.subtitle = subtitle
+        } else {
+            return nil
         }
     }
     
