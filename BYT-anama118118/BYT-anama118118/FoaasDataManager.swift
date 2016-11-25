@@ -10,5 +10,28 @@ import Foundation
 import UIKit
 
 class FoaasDataManager {
+    let shared: FoaasDataManager = FoaasDataManager()
     
+    private static let operationsKey: String = "FoaasOperationsKey"
+    private static let defaults = UserDefaults.standard
+    internal private(set) var operations: [FoaasOperation]?
+    
+    //Use flat map over for in loops
+    
+    func save(operations: [FoaasOperation]) {
+        var defaultDict = [String: [String: AnyObject]]()
+        for operation in operations {
+            defaultDict["\(operation.name)"] = FoaasOperation.toJson(operation)
+        }
+        
+        print(defaultDict)
+        FoaasDataManager.defaults.set(defaultDict,forKey: FoaasDataManager.operationsKey)
+        
+    }
+    func load() -> Bool {
+        return true
+    }
+    func deleteStoredOperations() {
+        FoaasDataManager.defaults.set(nil, forKey: FoaasDataManager.operationsKey)
+    }
 }

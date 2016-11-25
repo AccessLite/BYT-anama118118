@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A76312861DE6B98900AF13A7 /* FoaasDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76312851DE6B98900AF13A7 /* FoaasDataManager.swift */; };
+		A76312881DE7C05D00AF13A7 /* Contents.json in Resources */ = {isa = PBXBuildFile; fileRef = A76312871DE7C05D00AF13A7 /* Contents.json */; };
 		A7D656A51DE555FF001A5AB7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D656A41DE555FF001A5AB7 /* AppDelegate.swift */; };
 		A7D656A71DE555FF001A5AB7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D656A61DE555FF001A5AB7 /* ViewController.swift */; };
 		A7D656AA1DE555FF001A5AB7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7D656A81DE555FF001A5AB7 /* Main.storyboard */; };
@@ -24,6 +25,7 @@
 
 /* Begin PBXFileReference section */
 		A76312851DE6B98900AF13A7 /* FoaasDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoaasDataManager.swift; sourceTree = "<group>"; };
+		A76312871DE7C05D00AF13A7 /* Contents.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Contents.json; sourceTree = "<group>"; };
 		A7D656A11DE555FE001A5AB7 /* BYT-anama118118.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BYT-anama118118.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7D656A41DE555FF001A5AB7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A7D656A61DE555FF001A5AB7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -76,6 +78,7 @@
 				A7D656C21DE56AC8001A5AB7 /* View Controllers */,
 				A7D656C61DE56C0B001A5AB7 /* Managers */,
 				A7D656AB1DE555FF001A5AB7 /* Assets.xcassets */,
+				A76312871DE7C05D00AF13A7 /* Contents.json */,
 				A7D656AD1DE555FF001A5AB7 /* LaunchScreen.storyboard */,
 				A7D656B01DE555FF001A5AB7 /* Info.plist */,
 			);
@@ -175,6 +178,7 @@
 				A7D656AF1DE555FF001A5AB7 /* LaunchScreen.storyboard in Resources */,
 				A7D656AC1DE555FF001A5AB7 /* Assets.xcassets in Resources */,
 				A7D656AA1DE555FF001A5AB7 /* Main.storyboard in Resources */,
+				A76312881DE7C05D00AF13A7 /* Contents.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
