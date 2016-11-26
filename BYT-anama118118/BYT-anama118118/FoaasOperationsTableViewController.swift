@@ -19,14 +19,10 @@ class FoaasOperationsTableViewController: UITableViewController {
         super.viewDidLoad()
         
         FoaasAPIManager.getOperations { (arrayOfFoaasOperation: [FoaasOperation]?) in
-            guard let validArrayOfFoaasOperation = arrayOfFoaasOperation else {return}
+            guard let validArrayOfFoaasOperation = arrayOfFoaasOperation else { return }
             self.foaasOperationsArray = validArrayOfFoaasOperation
-//            dump(self.foaasOperationsArray)
+            
             FoaasDataManager.shared.save(operations: self.foaasOperationsArray)
-            print(FoaasDataManager.shared.load())
-//            dump(UserDefaults.standard.dictionaryRepresentation())
-//            dump(Array(UserDefaults.standard.dictionaryRepresentation().keys))
-            FoaasDataManager.shared.deleteStoredOperations()
             print(FoaasDataManager.shared.load())
         }
         
@@ -35,12 +31,6 @@ class FoaasOperationsTableViewController: UITableViewController {
             dump(self.foass)
         }
         
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-        
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
     
     override func didReceiveMemoryWarning() {

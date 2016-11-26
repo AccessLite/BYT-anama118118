@@ -18,40 +18,42 @@ class FoaasOperation: JSONConvertible, DataConvertible{
     var name: String = ""
     var url: String = ""
     var fields: [FoaasField] = []
-    var FoassOperations: [FoaasOperation] = []
-    static var endPoint = URL(string:"http://www.foaas.com/operations")!
+    
+    // variables are *always* camel case
+    // but in this case, why does your FoaasOperation have an array of FoaasOperation?
+    // this isn't needed
+    var foassOperations: [FoaasOperation] = []
+    
+    // the FoaasOperation class doesn't need knowledge of its endpoint
+//    static var endPoint = URL(string:"http://www.foaas.com/operations")!
     
     required init?(json: [String : AnyObject]){
+        
         guard let name = json["name"] as? String,
             let url = json["url"] as? String,
-            let fields = json["fields"] as? [[String:AnyObject]] else {
-                return
+            let fields = json["fields"] as? [[String:AnyObject]]
+        else {
+            // if you only return in a failable initializer, it's not actually going to exit
+            // it's only going to exit the guard statement
+            return nil
         }
+      
         var arrayOfFields = [FoaasField]()
         fields.forEach({ (field) in
-            if let eachfield = FoaasField.init(json: field){
+            if let eachfield = FoaasField(json: field){
                 arrayOfFields.append(eachfield)
             }
         })
+      
         self.name = name
         self.url = url
         self.fields = arrayOfFields
     }
     
     func toJson() -> [String : AnyObject]{
-        
-        var fieldJson = [[String:String]]()
-        self.fields.forEach { (field) in
-            let foaasFieldJson = field.toJson()
-            fieldJson.append(foaasFieldJson as! [String : String])
-        }
-        print(fieldJson)
-        
-        let json = ["name": self.name as AnyObject,
-                    "url": self.url as AnyObject,
-                    "fields": fieldJson as AnyObject]
-        print(json)
-        return json
+        return [ "name": self.name as AnyObject,
+                 "url": self.url as AnyObject,
+                 "fields": self.fields.map { $0.toJson() } as AnyObject]
     }
     
     required init? (data: Data){
@@ -64,7 +66,7 @@ class FoaasOperation: JSONConvertible, DataConvertible{
                 guard let validFoaasOperation = FoaasOperation(json: item) else {
                     throw FoaasOperationModelParseError.validFoaasOperation
                 }
-                self.FoassOperations.append(validFoaasOperation)
+                self.foassOperations.append(validFoaasOperation)
             })
         }catch FoaasOperationModelParseError.validJson {
             print("Pring error in parsing validJson")
@@ -79,7 +81,7 @@ class FoaasOperation: JSONConvertible, DataConvertible{
             fieldsBody.append(field.toJson())
         }
         
-        let foaasOperationBody : [String: AnyObject] =  ["name": self.name as AnyObject, "url": self.url as AnyObject, "fields": fieldsBody as AnyObject]
+        let foaasOperationBody : [String: AnyObject] =  [ "name": self.name as AnyObject, "url": self.url as AnyObject, "fields": fieldsBody as AnyObject ]
         var foaasOperationData: Data = Data()
         do {
             foaasOperationData = try JSONSerialization.data(withJSONObject: foaasOperationBody, options: [])
@@ -87,7 +89,8 @@ class FoaasOperation: JSONConvertible, DataConvertible{
         catch {
             print(error)
         }
-        dump(foaasOperationData)
+        
+//        dump(foaasOperationData)
         return foaasOperationData
     }
 }

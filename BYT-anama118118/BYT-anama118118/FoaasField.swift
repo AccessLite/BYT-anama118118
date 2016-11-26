@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+// error handling is good instinct, but its not in spec for this week
 enum FoaasFieldModelParseError: Error {
     case validJson
 }
@@ -25,7 +26,7 @@ class FoaasField: JSONConvertible, CustomStringConvertible {
     
     required init?(json: [String : AnyObject]){
         if let name = json["name"] as? String,
-            let field = json["field"] as? String{
+          let field = json["field"] as? String {
             self.name = name
             self.field = field
         } else {
@@ -34,8 +35,8 @@ class FoaasField: JSONConvertible, CustomStringConvertible {
     }
     
     func toJson() -> [String : AnyObject]{
-        return ["name": self.name as AnyObject,
-                "field": self.field as AnyObject]
+        return [ "name": self.name as AnyObject,
+                 "field": self.field as AnyObject ]
     }
     
 }
