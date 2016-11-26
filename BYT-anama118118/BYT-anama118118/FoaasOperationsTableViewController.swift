@@ -15,37 +15,33 @@ class FoaasOperationsTableViewController: UITableViewController {
     var foaasOperationsArray = [FoaasOperation]()
     var foass: Foaas?
     
+    var detailFoaasOperationsViewSegue = "detailFoaasOperationsViewSegue"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         FoaasAPIManager.getOperations { (arrayOfFoaasOperation: [FoaasOperation]?) in
             guard let validArrayOfFoaasOperation = arrayOfFoaasOperation else {return}
             self.foaasOperationsArray = validArrayOfFoaasOperation
-//            dump(self.foaasOperationsArray)
-            FoaasDataManager.shared.save(operations: self.foaasOperationsArray)
-            print(FoaasDataManager.shared.load())
+            dump(self.foaasOperationsArray)
+//            FoaasDataManager.shared.save(operations: self.foaasOperationsArray)
+//            print(FoaasDataManager.shared.load())
 //            dump(UserDefaults.standard.dictionaryRepresentation())
 //            dump(Array(UserDefaults.standard.dictionaryRepresentation().keys))
-            FoaasDataManager.shared.deleteStoredOperations()
-            print(FoaasDataManager.shared.load())
+//            FoaasDataManager.shared.deleteStoredOperations()
+//            print(FoaasDataManager.shared.load())
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
         
         FoaasAPIManager.getFoaas(url: endpointForFoaas) { (foaas: Foaas?) in
             self.foass = foaas
             dump(self.foass)
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
-        
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-        
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     // MARK: - Table view data source
@@ -62,57 +58,22 @@ class FoaasOperationsTableViewController: UITableViewController {
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "FoaasOperationCellIdentifier", for: indexPath)
+        cell.textLabel?.text = foaasOperationsArray[indexPath.row].name
         // Configure the cell...
         
         return cell
     }
     
-    
-    /*
-     // Override to support conditional editing of the table view.
-     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the specified item to be editable.
-     return true
-     }
-     */
-    
-    /*
-     // Override to support editing the table view.
-     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-     if editingStyle == .delete {
-     // Delete the row from the data source
-     tableView.deleteRows(at: [indexPath], with: .fade)
-     } else if editingStyle == .insert {
-     // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-     }
-     }
-     */
-    
-    /*
-     // Override to support rearranging the table view.
-     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-     
-     }
-     */
-    
-    /*
-     // Override to support conditional rearranging of the table view.
-     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the item to be re-orderable.
-     return true
-     }
-     */
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == detailFoaasOperationsViewSegue {
+            let detailFoaasOperationsViewController = segue.destination as! DetailFoaasOperationsViewController
+            if let cell = sender as? UITableViewCell {
+                if let indexPath = tableView.indexPath(for: cell) {
+                    let foaasOperationSelected = foaasOperationsArray[indexPath.row]
+                    detailFoaasOperationsViewController.foaasOperationSelected = foaasOperationSelected
+                }
+            }
+        }
+    }
 }

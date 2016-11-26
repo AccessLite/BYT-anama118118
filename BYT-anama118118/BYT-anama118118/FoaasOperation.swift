@@ -19,6 +19,7 @@ class FoaasOperation: JSONConvertible, DataConvertible{
     var url: String = ""
     var fields: [FoaasField] = []
     var FoassOperations: [FoaasOperation] = []
+    static var cellIdentifier = "FoaasOperationCellIdentifier"
     static var endPoint = URL(string:"http://www.foaas.com/operations")!
     
     required init?(json: [String : AnyObject]){

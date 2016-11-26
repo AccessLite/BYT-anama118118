@@ -10,7 +10,6 @@
 		A76312861DE6B98900AF13A7 /* FoaasDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76312851DE6B98900AF13A7 /* FoaasDataManager.swift */; };
 		A76312881DE7C05D00AF13A7 /* Contents.json in Resources */ = {isa = PBXBuildFile; fileRef = A76312871DE7C05D00AF13A7 /* Contents.json */; };
 		A7D656A51DE555FF001A5AB7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D656A41DE555FF001A5AB7 /* AppDelegate.swift */; };
-		A7D656A71DE555FF001A5AB7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D656A61DE555FF001A5AB7 /* ViewController.swift */; };
 		A7D656AA1DE555FF001A5AB7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7D656A81DE555FF001A5AB7 /* Main.storyboard */; };
 		A7D656AC1DE555FF001A5AB7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7D656AB1DE555FF001A5AB7 /* Assets.xcassets */; };
 		A7D656AF1DE555FF001A5AB7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7D656AD1DE555FF001A5AB7 /* LaunchScreen.storyboard */; };
@@ -21,6 +20,7 @@
 		A7D656BF1DE56A53001A5AB7 /* FoaasViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D656BE1DE56A53001A5AB7 /* FoaasViewController.swift */; };
 		A7D656C11DE56A7F001A5AB7 /* FoaasOperationsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D656C01DE56A7F001A5AB7 /* FoaasOperationsTableViewController.swift */; };
 		A7D656C51DE56BE1001A5AB7 /* FoaasAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D656C41DE56BE1001A5AB7 /* FoaasAPIManager.swift */; };
+		A7E349101DE954560072FDB8 /* DetailFoaasOperationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E3490F1DE954560072FDB8 /* DetailFoaasOperationsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,7 +28,6 @@
 		A76312871DE7C05D00AF13A7 /* Contents.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Contents.json; sourceTree = "<group>"; };
 		A7D656A11DE555FE001A5AB7 /* BYT-anama118118.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BYT-anama118118.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7D656A41DE555FF001A5AB7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		A7D656A61DE555FF001A5AB7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		A7D656A91DE555FF001A5AB7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A7D656AB1DE555FF001A5AB7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A7D656AE1DE555FF001A5AB7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -40,6 +39,7 @@
 		A7D656BE1DE56A53001A5AB7 /* FoaasViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoaasViewController.swift; sourceTree = "<group>"; };
 		A7D656C01DE56A7F001A5AB7 /* FoaasOperationsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoaasOperationsTableViewController.swift; sourceTree = "<group>"; };
 		A7D656C41DE56BE1001A5AB7 /* FoaasAPIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoaasAPIManager.swift; sourceTree = "<group>"; };
+		A7E3490F1DE954560072FDB8 /* DetailFoaasOperationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailFoaasOperationsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,9 +88,9 @@
 		A7D656C21DE56AC8001A5AB7 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				A7D656A61DE555FF001A5AB7 /* ViewController.swift */,
 				A7D656BE1DE56A53001A5AB7 /* FoaasViewController.swift */,
 				A7D656C01DE56A7F001A5AB7 /* FoaasOperationsTableViewController.swift */,
+				A7E3490F1DE954560072FDB8 /* DetailFoaasOperationsViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -192,8 +192,8 @@
 				A76312861DE6B98900AF13A7 /* FoaasDataManager.swift in Sources */,
 				A7D656C11DE56A7F001A5AB7 /* FoaasOperationsTableViewController.swift in Sources */,
 				A7D656BD1DE55D20001A5AB7 /* FoaasProtocols.swift in Sources */,
-				A7D656A71DE555FF001A5AB7 /* ViewController.swift in Sources */,
 				A7D656C51DE56BE1001A5AB7 /* FoaasAPIManager.swift in Sources */,
+				A7E349101DE954560072FDB8 /* DetailFoaasOperationsViewController.swift in Sources */,
 				A7D656BF1DE56A53001A5AB7 /* FoaasViewController.swift in Sources */,
 				A7D656BB1DE55C62001A5AB7 /* FoaasField.swift in Sources */,
 				A7D656A51DE555FF001A5AB7 /* AppDelegate.swift in Sources */,
