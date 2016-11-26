@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class FoaasAPIManager {
-    static let manager: FoaasAPIManager = FoaasAPIManager()
+    internal static let manager: FoaasAPIManager = FoaasAPIManager()
     private init () {}
     private static let defaultSession = URLSession(configuration: .default)
     

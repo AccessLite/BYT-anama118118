@@ -39,15 +39,19 @@ class FoaasOperation: JSONConvertible, DataConvertible{
     }
     
     func toJson() -> [String : AnyObject]{
-        var fieldJson = [[String:AnyObject]]()
+        
+        var fieldJson = [[String:String]]()
         self.fields.forEach { (field) in
-            let foaasFieldJson = FoaasField.toJson(field)
-            fieldJson.append(foaasFieldJson())
+            let foaasFieldJson = field.toJson()
+            fieldJson.append(foaasFieldJson as! [String : String])
         }
-        return ["name": self.name as AnyObject,
-                "url": self.url as AnyObject,
-                "fields": fieldJson as AnyObject
-        ]
+        print(fieldJson)
+        
+        let json = ["name": self.name as AnyObject,
+                    "url": self.url as AnyObject,
+                    "fields": fieldJson as AnyObject]
+        print(json)
+        return json
     }
     
     required init? (data: Data){
@@ -68,10 +72,14 @@ class FoaasOperation: JSONConvertible, DataConvertible{
             print(error)
         }
     }
+    
     func toData() throws -> Data{
-        let foaasOperationBody : [String: Any] =  ["name": self.name,
-        "url": self.url,
-        "fields": self.fields]
+        var fieldsBody = [[String: AnyObject]]()
+        for field in self.fields {
+            fieldsBody.append(field.toJson())
+        }
+        
+        let foaasOperationBody : [String: AnyObject] =  ["name": self.name as AnyObject, "url": self.url as AnyObject, "fields": fieldsBody as AnyObject]
         var foaasOperationData: Data = Data()
         do {
             foaasOperationData = try JSONSerialization.data(withJSONObject: foaasOperationBody, options: [])
@@ -79,6 +87,7 @@ class FoaasOperation: JSONConvertible, DataConvertible{
         catch {
             print(error)
         }
+        dump(foaasOperationData)
         return foaasOperationData
     }
 }

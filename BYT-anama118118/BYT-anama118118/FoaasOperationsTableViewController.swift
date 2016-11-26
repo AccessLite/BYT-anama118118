@@ -21,13 +21,20 @@ class FoaasOperationsTableViewController: UITableViewController {
         FoaasAPIManager.getOperations { (arrayOfFoaasOperation: [FoaasOperation]?) in
             guard let validArrayOfFoaasOperation = arrayOfFoaasOperation else {return}
             self.foaasOperationsArray = validArrayOfFoaasOperation
-            dump(self.foaasOperationsArray)
+//            dump(self.foaasOperationsArray)
+            FoaasDataManager.shared.save(operations: self.foaasOperationsArray)
+            print(FoaasDataManager.shared.load())
+//            dump(UserDefaults.standard.dictionaryRepresentation())
+//            dump(Array(UserDefaults.standard.dictionaryRepresentation().keys))
+            FoaasDataManager.shared.deleteStoredOperations()
+            print(FoaasDataManager.shared.load())
         }
         
         FoaasAPIManager.getFoaas(url: endpointForFoaas) { (foaas: Foaas?) in
             self.foass = foaas
             dump(self.foass)
         }
+        
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false

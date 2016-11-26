@@ -10,7 +10,8 @@ import Foundation
 import UIKit
 
 class FoaasDataManager {
-    let shared: FoaasDataManager = FoaasDataManager()
+    
+    internal static let shared: FoaasDataManager = FoaasDataManager()
     
     private static let operationsKey: String = "FoaasOperationsKey"
     private static let defaults = UserDefaults.standard
@@ -19,17 +20,20 @@ class FoaasDataManager {
     //Use flat map over for in loops
     
     func save(operations: [FoaasOperation]) {
-        var defaultDict = [String: [String: AnyObject]]()
+//        let defaultDict = operations.flatMap {$0.toJson()}
+        var defaultArray = [[String:AnyObject]]()
         for operation in operations {
-            defaultDict["\(operation.name)"] = FoaasOperation.toJson(operation)
+            defaultArray.append(operation.toJson())
         }
-        
-        print(defaultDict)
-        FoaasDataManager.defaults.set(defaultDict,forKey: FoaasDataManager.operationsKey)
-        
+        print(defaultArray)
+        dump(defaultArray)
+//        print(defaultDict)
+        FoaasDataManager.defaults.set(defaultArray,forKey: FoaasDataManager.operationsKey)
+//        print(FoaasDataManager.defaults.dictionary(forKey: FoaasDataManager.operationsKey))
+//        var defaultDict = [String: AnyObject]()
     }
     func load() -> Bool {
-        return true
+        return FoaasDataManager.defaults.dictionary(forKey: "FoaasOperationsKey") != nil
     }
     func deleteStoredOperations() {
         FoaasDataManager.defaults.set(nil, forKey: FoaasDataManager.operationsKey)
