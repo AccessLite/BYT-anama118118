@@ -17,24 +17,39 @@ class FoaasDataManager {
     private static let defaults = UserDefaults.standard
     internal private(set) var operations: [FoaasOperation]?
     
-    //Use flat map over for in loops
-    
     func save(operations: [FoaasOperation]) {
-//        let defaultDict = operations.flatMap {$0.toJson()}
-        var defaultArray = [[String:AnyObject]]()
+        var defaultDataArray: [Data] = []
         for operation in operations {
-            defaultArray.append(operation.toJson())
+            do {
+                let validData = try operation.toData()
+                defaultDataArray.append(validData)
+            }
+            catch {
+                print(error)
+            }
         }
-        print(defaultArray)
-        dump(defaultArray)
-//        print(defaultDict)
-        FoaasDataManager.defaults.set(defaultArray,forKey: FoaasDataManager.operationsKey)
-//        print(FoaasDataManager.defaults.dictionary(forKey: FoaasDataManager.operationsKey))
-//        var defaultDict = [String: AnyObject]()
+        //Will use flat map over for in loops whe ready, the following flatmap has an error eror not handled
+//        do {
+//            let defaultDataArray: [Data] = operations.flatMap{ $0.toData() }
+//        } catch {
+//            print(error)
+//        }
+        
+        FoaasDataManager.defaults.set(defaultDataArray,forKey: FoaasDataManager.operationsKey)
+        print("Saved \(FoaasDataManager.defaults.dictionary(forKey: FoaasDataManager.operationsKey))")
     }
+    
     func load() -> Bool {
-        return FoaasDataManager.defaults.dictionary(forKey: "FoaasOperationsKey") != nil
+        guard let operationsData: [Data] = FoaasDataManager.defaults.value(forKey: FoaasDataManager.operationsKey) as? [Data] else {
+            return false
+        }
+        
+        self.operations = operationsData.flatMap{ FoaasOperation(data: $0) }
+        
+        print(operations)
+        return true
     }
+    
     func deleteStoredOperations() {
         FoaasDataManager.defaults.set(nil, forKey: FoaasDataManager.operationsKey)
     }

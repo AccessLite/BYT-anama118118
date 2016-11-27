@@ -13,7 +13,7 @@ class FoaasAPIManager {
     internal static let manager: FoaasAPIManager = FoaasAPIManager()
     private init () {}
     private static let defaultSession = URLSession(configuration: .default)
-    
+    private static let operationsURL = URL(string: "https://www.foaas.com/operations")!
     
     internal class func getFoaas(url: URL, completion: @escaping (Foaas?)->Void) {
         //http://www.foaas.com/awesome/louis
@@ -26,15 +26,15 @@ class FoaasAPIManager {
         let session = URLSession(configuration: URLSessionConfiguration.default)
         session.dataTask(with: request) { (data:Data?, request: URLResponse?, error: Error?) in
             if error != nil {
-                print(error)
+                print(error!)
             }
-            guard let validData = data else {return}
+            guard let validData = data else { return }
             do {
                 let json = try JSONSerialization.jsonObject(with: validData, options: [])
                 guard let validJson = json as? [String: AnyObject] else {
                     throw FoaasModelParseError.validJson
                 }
-                completion(Foaas.init(json: validJson))
+                completion(Foaas(json: validJson))
             }
             catch FoaasModelParseError.validJson {
                 print("error in parsing valid json")
@@ -46,21 +46,33 @@ class FoaasAPIManager {
     }
     
     internal class func getOperations(completion: @escaping ([FoaasOperation]?)->Void) {
-        defaultSession.dataTask(with: FoaasOperation.endPoint) { (data: Data?, response: URLResponse?, error: Error?) in
+        defaultSession.dataTask(with: operationsURL) { (data: Data?, response: URLResponse?, error: Error?) in
             if error != nil {
+                print(error!)
+            }
+            var foaasOperations: [FoaasOperation] = []
+            guard let validData = data else { return }
+            do {
+                let json = try JSONSerialization.jsonObject(with: validData, options: [])
+                guard let arrayOfDict = json as? [[String: AnyObject]] else { return }
+                try arrayOfDict.forEach({ (item) in
+                    let itemData = try JSONSerialization.data(withJSONObject: item, options: [])
+                    guard let validFoaasOperation = FoaasOperation(data: itemData) else { return }
+                    foaasOperations.append(validFoaasOperation)
+                })
+            }
+            catch {
                 print(error)
             }
-            guard let validData = data else {return}
-            guard let validFoaasOperationsArray = FoaasOperation(data: validData)?.FoassOperations else {return}
-            completion(validFoaasOperationsArray)
+            completion(foaasOperations)
             }.resume()
     }
     
     static func getData(endpoint: String, complete: @escaping (Data?) -> Void){
-        guard let url = URL(string: endpoint) else {return}
+        guard let url = URL(string: endpoint) else { return }
         defaultSession.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) in
             if error != nil {
-                print(error)
+                print(error!)
             }
             if data != nil {
                 complete(data)
