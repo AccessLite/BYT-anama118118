@@ -32,6 +32,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var selectButton: UIBarButtonItem!
     
     var urlString: String = "http://www.foaas.com"
+    var editingTextField: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -116,11 +117,15 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         print(self.urlString)
         self.view.endEditing(true)
         self.view.frame = CGRect(x: self.view.frame.origin.x, y: self.view.frame.origin.y + 100, width: self.view.frame.size.height, height: self.view.frame.size.height)
+        editingTextField -= 1
         return true
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        if editingTextField == 0 {
         self.view.frame = CGRect(x: self.view.frame.origin.x, y: self.view.frame.origin.y - 100, width: self.view.frame.size.height, height: self.view.frame.size.height)
+            editingTextField += 1
+        }
     }
     
     func callApi() {
@@ -132,7 +137,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
                 let attributedString = NSMutableAttributedString(string: self.foaas.message, attributes: [NSFontAttributeName:UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium)])
                 let fromAttribute = NSMutableAttributedString(string: "\n\n" + self.foaas.subtitle, attributes: [NSForegroundColorAttributeName:UIColor.black, NSFontAttributeName:UIFont.systemFont(ofSize: 24, weight: UIFontWeightThin)])
                 let paragraphStyle = NSMutableParagraphStyle()
-                paragraphStyle.alignment = .right
+                paragraphStyle.alignment = .left
                 
                 let textLength = fromAttribute.string.characters.count
                 let range = NSRange(location: 0, length: textLength)
