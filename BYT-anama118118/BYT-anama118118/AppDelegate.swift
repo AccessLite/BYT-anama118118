@@ -28,6 +28,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        navigationController.viewControllers = [initialViewController]
 //        self.window?.rootViewController = navigationController
 //        self.window?.makeKeyAndVisible()
+        
+        if !FoaasDataManager.shared.load() {
+            FoaasAPIManager.getOperations(completion: { (operations) in
+                if operations != nil {
+                    FoaasDataManager.shared.save(operations: operations!)
+                }
+            })
+            
+        }
+        
         return true
     }
 

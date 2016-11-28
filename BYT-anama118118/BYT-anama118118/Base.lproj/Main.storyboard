@@ -110,10 +110,10 @@
             </objects>
             <point key="canvasLocation" x="2148" y="-52.623688155922046"/>
         </scene>
-        <!--Detail Foaas Operations View Controller-->
+        <!--Foaas Preview View Controller-->
         <scene sceneID="7nF-m5-LoA">
             <objects>
-                <viewController id="0mW-40-DSw" customClass="DetailFoaasOperationsViewController" customModule="BYT_anama118118" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="0mW-40-DSw" customClass="FoaasPreviewViewController" customModule="BYT_anama118118" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Vui-ke-XFk"/>
                         <viewControllerLayoutGuide type="bottom" id="77F-ZJ-fD3"/>
@@ -130,22 +130,67 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1WG-Xj-xPc">
-                                <frame key="frameInset" minX="16" minY="426" width="343" height="30"/>
+                                <frame key="frameInset" minX="16" minY="420" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="Full Operation Label" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="5kS-Kg-mWi">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="Full Operation Preview Text View" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="5kS-Kg-mWi">
                                 <frame key="frameInset" minX="16" minY="163" width="343" height="220"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Field" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2x0-Md-wz8">
+                                <frame key="frameInset" minX="16" minY="391" width="343" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="yZg-yr-gyM">
+                                <frame key="frameInset" minX="16" minY="493" width="343" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="yry-UG-Xrh">
+                                <frame key="frameInset" minX="16" minY="567" width="343" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Field" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qwf-4T-ejy">
+                                <frame key="frameInset" minX="16" minY="531" width="343" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Field" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1jn-pP-sGl">
+                                <frame key="frameInset" minX="16" minY="458" width="343" height="27"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <connections>
+                        <outlet property="field1Label" destination="2x0-Md-wz8" id="IaP-NK-QnA"/>
+                        <outlet property="field1TextField" destination="1WG-Xj-xPc" id="0uM-eE-PSE"/>
+                        <outlet property="field2Label" destination="1jn-pP-sGl" id="Ht7-by-hQc"/>
+                        <outlet property="field2TextField" destination="yZg-yr-gyM" id="GDk-cL-Bex"/>
+                        <outlet property="field3Label" destination="Qwf-4T-ejy" id="TUO-Fj-Sn7"/>
+                        <outlet property="field3TextField" destination="yry-UG-Xrh" id="wgt-jA-Qyn"/>
+                        <outlet property="fullOperationPrevieTextView" destination="5kS-Kg-mWi" id="xVF-Yk-ql0"/>
+                        <outlet property="operationNameLabel" destination="KXd-sm-cHh" id="0tr-76-zHI"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YaS-NL-QOL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

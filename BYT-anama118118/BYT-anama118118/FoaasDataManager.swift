@@ -28,7 +28,7 @@ class FoaasDataManager {
                 print(error)
             }
         }
-        //Will use flat map over for in loops whe ready, the following flatmap has an error eror not handled
+        //Will use flat map over for in loops when ready, the following flatmap has an error eror not handled
 //        do {
 //            let defaultDataArray: [Data] = operations.flatMap{ $0.toData() }
 //        } catch {
@@ -36,17 +36,16 @@ class FoaasDataManager {
 //        }
         
         FoaasDataManager.defaults.set(defaultDataArray,forKey: FoaasDataManager.operationsKey)
-        print("Saved \(FoaasDataManager.defaults.dictionary(forKey: FoaasDataManager.operationsKey))")
+//        print("Saved \(FoaasDataManager.defaults.dictionary(forKey: FoaasDataManager.operationsKey))")
     }
     
     func load() -> Bool {
         guard let operationsData: [Data] = FoaasDataManager.defaults.value(forKey: FoaasDataManager.operationsKey) as? [Data] else {
             return false
         }
-        
         self.operations = operationsData.flatMap{ FoaasOperation(data: $0) }
         
-        print(operations)
+//        print(operations)
         return true
     }
     

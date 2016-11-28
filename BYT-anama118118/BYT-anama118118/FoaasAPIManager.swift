@@ -14,6 +14,7 @@ class FoaasAPIManager {
     private init () {}
     private static let defaultSession = URLSession(configuration: .default)
     private static let operationsURL = URL(string: "https://www.foaas.com/operations")!
+    static let foaasURL = URL(string: "http://www.foaas.com/awesome/louis")
     
     internal class func getFoaas(url: URL, completion: @escaping (Foaas?)->Void) {
         //http://www.foaas.com/awesome/louis

@@ -15,13 +15,15 @@ class FoaasViewController: UIViewController {
     @IBOutlet weak var octoButton: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        FoaasAPIManager.getFoaas(url: FoaasAPIManager.foaasURL!) { (foaas: Foaas?) in
+            DispatchQueue.main.async {
+                self.mainTextLabel.text = foaas?.message
+                self.subtitleTextLabel.text = foaas?.subtitle
+            }
+        }
 
         // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     @IBAction func octoButtonTapped(_ sender: UIButton) {

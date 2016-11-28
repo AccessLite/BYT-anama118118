@@ -13,7 +13,7 @@ class FoaasOperationsTableViewController: UITableViewController {
     static var endPoint = URL(string:"http://www.foaas.com/operations")!
     var endpointForFoaas = URL(string: "http://www.foaas.com/awesome/louis")!
     
-    var foaasOperationsArray: [FoaasOperation] = []
+    var foaasOperationsArray: [FoaasOperation]? = FoaasDataManager.shared.operations
     var foass: Foaas?
     
     var detailFoaasOperationsViewSegue = "detailFoaasOperationsViewSegue"
@@ -21,29 +21,18 @@ class FoaasOperationsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        FoaasAPIManager.getOperations { (arrayOfFoaasOperation: [FoaasOperation]?) in
-            print("\(FoaasDataManager.shared.load()) Before setting array")
-            guard let validArrayOfFoaasOperation = arrayOfFoaasOperation else { return }
-            self.foaasOperationsArray = validArrayOfFoaasOperation
-            print("\(FoaasDataManager.shared.load()) After setting array" )
-            dump("\(UserDefaults.standard.dictionaryRepresentation()) After setting array" )
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-                FoaasDataManager.shared.save(operations: self.foaasOperationsArray)
-                dump("\(UserDefaults.standard.dictionaryRepresentation()) After saving")
-                print("\(FoaasDataManager.shared.load())) After saving")
-                FoaasDataManager.shared.deleteStoredOperations()
-                dump("\(UserDefaults.standard.dictionaryRepresentation()) After deleting")
-            }
-        }
+//        FoaasAPIManager.getOperations { (arrayOfFoaasOperation: [FoaasOperation]?) in
+//
+//            guard let validArrayOfFoaasOperation = arrayOfFoaasOperation else { return }
+//            self.foaasOperationsArray = validArrayOfFoaasOperation
 
-        FoaasAPIManager.getFoaas(url: endpointForFoaas) { (foaas: Foaas?) in
-            self.foass = foaas
-            dump(self.foass)
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
+//            DispatchQueue.main.async {
+//                self.tableView.reloadData()
+//                FoaasDataManager.shared.save(operations: self.foaasOperationsArray)
+//                FoaasDataManager.shared.deleteStoredOperations()
+//            }
+//        }
+//
     }
     
     // MARK: - Table view data source
@@ -53,23 +42,24 @@ class FoaasOperationsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return foaasOperationsArray.count
+        return foaasOperationsArray?.count ?? 0
     }
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "FoaasOperationCellIdentifier", for: indexPath)
-        cell.textLabel?.text = foaasOperationsArray[indexPath.row].name
+        cell.textLabel?.text = foaasOperationsArray?[indexPath.row].name
         return cell
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == detailFoaasOperationsViewSegue {
-            let detailFoaasOperationsViewController = segue.destination as! DetailFoaasOperationsViewController
+            let FoaasPreviewViewController = segue.destination as! FoaasPreviewViewController
             if let cell = sender as? UITableViewCell {
                 if let indexPath = tableView.indexPath(for: cell) {
-                    let foaasOperationSelected = foaasOperationsArray[indexPath.row]
-                    detailFoaasOperationsViewController.foaasOperationSelected = foaasOperationSelected
+                    let foaasOperationSelected = foaasOperationsArray?[indexPath.row]
+                    FoaasPreviewViewController.foaasOperationSelected = foaasOperationSelected
+                    dump(foaasOperationSelected)
                 }
             }
         }
