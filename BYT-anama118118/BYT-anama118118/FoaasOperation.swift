@@ -24,11 +24,11 @@ class FoaasOperation: JSONConvertible, DataConvertible{
     required init?(json: [String : AnyObject]){
         guard let name = json["name"] as? String,
             let url = json["url"] as? String,
-            let fields = json["fields"] as? [[String:AnyObject]]
+            let fields = json["fields"] as? [[String : AnyObject]]
         else {
                 return nil
         }
-        var arrayOfFields : [FoaasField] = []
+        var arrayOfFields: [FoaasField] = []
         fields.forEach({ (field) in
             if let eachfield = FoaasField(json: field){
                 arrayOfFields.append(eachfield)
@@ -40,16 +40,16 @@ class FoaasOperation: JSONConvertible, DataConvertible{
     }
     
     func toJson() -> [String : AnyObject]{
-        let json = ["name": self.name as AnyObject,
+        let json = [ "name": self.name as AnyObject,
                     "url": self.url as AnyObject,
-                    "fields": self.fields.map{ $0.toJson() }as AnyObject]
+                    "fields": self.fields.map{ $0.toJson() }as AnyObject ]
         return json
     }
     
     required init? (data: Data){
         do {
             let json = try JSONSerialization.jsonObject(with: data, options: [])
-            guard let dict = json as? [String: AnyObject] else {
+            guard let dict = json as? [String : AnyObject] else {
                 throw FoaasOperationModelParseError.validJson
             }
             guard let validFoaasOperation = FoaasOperation(json: dict) else {
@@ -66,12 +66,12 @@ class FoaasOperation: JSONConvertible, DataConvertible{
     }
     
     func toData() throws -> Data{
-        var fieldsBody : [[String: AnyObject]] = []
+        var fieldsBody: [[String : AnyObject]] = []
         for field in self.fields {
             fieldsBody.append(field.toJson())
         }
         
-        let foaasOperationBody : [String: AnyObject] =  [ "name": self.name as AnyObject, "url": self.url as AnyObject, "fields": fieldsBody as AnyObject ]
+        let foaasOperationBody: [String : AnyObject] =  [ "name": self.name as AnyObject, "url": self.url as AnyObject, "fields": fieldsBody as AnyObject ]
         var foaasOperationData: Data = Data()
         do {
             foaasOperationData = try JSONSerialization.data(withJSONObject: foaasOperationBody, options: [])

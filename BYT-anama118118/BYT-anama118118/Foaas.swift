@@ -28,7 +28,8 @@ class Foaas: JSONConvertible, CustomStringConvertible{
             let subtitle = json["subtitle"] as? String {
             self.message = message
             self.subtitle = subtitle
-        } else {
+        }
+        else {
             return nil
         }
     }

@@ -9,7 +9,6 @@
 import UIKit
 
 class FoaasOperationsTableViewController: UITableViewController {
-    var endpoint = "http://www.foaas.com/operations"
     static var endPoint = URL(string:"http://www.foaas.com/operations")!
     var endpointForFoaas = URL(string: "http://www.foaas.com/awesome/louis")!
     
@@ -45,7 +44,6 @@ class FoaasOperationsTableViewController: UITableViewController {
         return foaasOperationsArray?.count ?? 0
     }
     
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "FoaasOperationCellIdentifier", for: indexPath)
         cell.textLabel?.text = foaasOperationsArray?[indexPath.row].name
@@ -64,4 +62,10 @@ class FoaasOperationsTableViewController: UITableViewController {
             }
         }
     }
+    
+    @IBAction func backOctoCuteTapped(_ sender: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
+//        performSegue(withIdentifier: "octoCuteTappedToFoaasViewControllerSegue", sender: sender)
+    }
+
 }
