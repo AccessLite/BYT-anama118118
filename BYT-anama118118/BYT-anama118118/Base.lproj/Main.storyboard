@@ -22,7 +22,7 @@
                                 <constraints>
                                     <constraint firstAttribute="width" constant="359" id="rpt-EC-T1u"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="50"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="45"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -34,14 +34,14 @@
                                 <state key="normal" title="Button" image="Octopus-Cute"/>
                                 <connections>
                                     <action selector="octoButtonTapped:" destination="P8w-17-Sk1" eventType="touchUpInside" id="Gf2-3f-W4e"/>
-                                    <segue destination="3QU-Qa-a8O" kind="show" identifier="foaasOperationsTableViewControllerSegue" id="Suc-J7-DrE"/>
+                                    <segue destination="3QU-Qa-a8O" kind="modal" identifier="foaasOperationsTableViewControllerSegue" id="Suc-J7-DrE"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="From,\n Name Label" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gxO-bp-hOa">
                                 <constraints>
                                     <constraint firstAttribute="height" constant="96" id="e6w-fk-SRB"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="36"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>

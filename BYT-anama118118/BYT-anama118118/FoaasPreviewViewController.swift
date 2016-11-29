@@ -10,15 +10,11 @@ import UIKit
 
 class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     
-    //    - name: "Awesome"
-    //    - url: "/awesome/:from"
-    //    ▿ fields: 1 element
-    //    ▿ From from #1
-    //    - name: "From"
-    //    - field: "from"
-    
     var foaasOperationSelected: FoaasOperation!
     var foaas: Foaas!
+    lazy var yValue: CGFloat = {
+        return self.view.frame.origin.y
+    }()
     
     @IBOutlet weak var fullOperationPrevieTextView: UITextView!
     
@@ -44,6 +40,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         
         callApi()
         fieldLabelAndTextFieldSetUP()
+        self.navigationItem.hidesBackButton = true
     }
 
     func fieldLabelAndTextFieldSetUP() {
@@ -92,22 +89,31 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         switch self.foaasOperationSelected.fields.count{
         case 1:
             if field1TextField.text != "" {
-                self.urlString = self.urlString.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[0].field)", with: field1TextField.text!)
+//                let searchField: String = self.field1TextField.text!.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
+//                print(searchField)
+                let validSearchField1 = field1TextField.text!.replacingOccurrences(of: " ", with: "%20")
+                print(validSearchField1)
+                self.urlString = self.urlString.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[0].field)", with: validSearchField1)
                 callApi()
                 self.selectButton.isEnabled = true
             }
         case 2:
             if field1TextField.text != "" && field2TextField.text != "" {
-                self.urlString = self.urlString.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[0].field)", with: field1TextField.text!)
-                self.urlString = self.urlString.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[1].field)", with: field2TextField.text!)
+                let validSearchField1 = field1TextField.text!.replacingOccurrences(of: " ", with: "%20")
+                let validSearchField2 = field2TextField.text!.replacingOccurrences(of: " ", with: "%20")
+                self.urlString = self.urlString.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[0].field)", with: validSearchField1)
+                self.urlString = self.urlString.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[1].field)", with: validSearchField2)
                 callApi()
                 self.selectButton.isEnabled = true
             }
         case 3:
             if field1TextField.text != "" && field2TextField.text != "" && field3TextField.text != ""{
-                self.urlString = self.urlString.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[0].field)", with: field1TextField.text!)
-                self.urlString = self.urlString.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[1].field)", with: field2TextField.text!)
-                self.urlString = self.urlString.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[2].field)", with: field3TextField.text!)
+                let validSearchField1 = field1TextField.text!.replacingOccurrences(of: " ", with: "%20")
+                let validSearchField2 = field2TextField.text!.replacingOccurrences(of: " ", with: "%20")
+                let validSearchField3 = field3TextField.text!.replacingOccurrences(of: " ", with: "%20")
+                self.urlString = self.urlString.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[0].field)", with: validSearchField1)
+                self.urlString = self.urlString.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[1].field)", with: validSearchField2)
+                self.urlString = self.urlString.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[2].field)", with: validSearchField3)
                 callApi()
                 self.selectButton.isEnabled = true
             }
@@ -115,17 +121,25 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
             break
         }
         print(self.urlString)
+        keyboardHide()
         self.view.endEditing(true)
-        self.view.frame = CGRect(x: self.view.frame.origin.x, y: self.view.frame.origin.y + 100, width: self.view.frame.size.height, height: self.view.frame.size.height)
-        editingTextField -= 1
         return true
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        if editingTextField == 0 {
-        self.view.frame = CGRect(x: self.view.frame.origin.x, y: self.view.frame.origin.y - 100, width: self.view.frame.size.height, height: self.view.frame.size.height)
-            editingTextField += 1
-        }
+        keyboardShow()
+    }
+    
+    func keyboardShow() {
+        print("keyboardShow")
+        self.field3TextField.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -300).isActive = true
+//        view.frame = CGRect(x: view.frame.origin.x, y: yValue  - 150, width: view.frame.size.width, height: view.frame.size.height)
+    }
+    
+    func keyboardHide() {
+        print("keyboardHide")
+        self.field3TextField.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 20).isActive = true
+//        view.frame = CGRect(x: view.frame.origin.x, y: yValue, width: view.frame.size.width, height: view.frame.size.height)
     }
     
     func callApi() {
@@ -137,7 +151,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
                 let attributedString = NSMutableAttributedString(string: self.foaas.message, attributes: [NSFontAttributeName:UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium)])
                 let fromAttribute = NSMutableAttributedString(string: "\n\n" + self.foaas.subtitle, attributes: [NSForegroundColorAttributeName:UIColor.black, NSFontAttributeName:UIFont.systemFont(ofSize: 24, weight: UIFontWeightThin)])
                 let paragraphStyle = NSMutableParagraphStyle()
-                paragraphStyle.alignment = .left
+                paragraphStyle.alignment = .right
                 
                 let textLength = fromAttribute.string.characters.count
                 let range = NSRange(location: 0, length: textLength)
@@ -171,3 +185,11 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         //        }
     }
 }
+
+
+//    - name: "Awesome"
+//    - url: "/awesome/:from"
+//    ▿ fields: 1 element
+//    ▿ From from #1
+//    - name: "From"
+//    - field: "from"

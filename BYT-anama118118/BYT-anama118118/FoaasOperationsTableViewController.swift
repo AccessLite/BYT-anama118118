@@ -31,7 +31,6 @@ class FoaasOperationsTableViewController: UITableViewController {
 //                FoaasDataManager.shared.deleteStoredOperations()
 //            }
 //        }
-//
     }
     
     // MARK: - Table view data source
