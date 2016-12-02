@@ -18,9 +18,7 @@ class Foaas: JSONConvertible, CustomStringConvertible{
     var subtitle: String
     
     public var description: String {
-        get{
-            return "\(message) \(subtitle)"
-        }
+        return "\(message) \(subtitle)"
     }
     
     required init?(json: [String : AnyObject]){

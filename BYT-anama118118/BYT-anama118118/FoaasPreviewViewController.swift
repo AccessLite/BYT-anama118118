@@ -8,10 +8,17 @@
 
 import UIKit
 
+/* Notes:
+ 
+ The preview updating only works if you press the return key on the keyboard. I'd like to see didEndEditing implemented as well to do this
+ 
+ */
 class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     
     var foaasOperationSelected: FoaasOperation!
     var foaas: Foaas!
+    
+    // why lazy?
     lazy var yValue: CGFloat = {
         return self.view.frame.origin.y
     }()
@@ -40,7 +47,9 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         
         callApi()
         fieldLabelAndTextFieldSetUP()
-        self.navigationItem.hidesBackButton = true
+        
+        // we do want to allow for someone to hit < Back here, though I realize it wasn't in the storyboard I gave you.
+        self.navigationItem.hidesBackButton = false
     }
 
     func fieldLabelAndTextFieldSetUP() {
@@ -84,14 +93,17 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    // Text fields will not update if one of them is missing text and you press "Return", which is one reason you should
+    // also use didFinishEditing
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.urlString = "http://www.foaas.com\(self.foaasOperationSelected.url)"
         switch self.foaasOperationSelected.fields.count{
+
+        // I'd like to see these cases refactored in some way
         case 1:
             if field1TextField.text != "" {
-//                let searchField: String = self.field1TextField.text!.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
-//                print(searchField)
-                let validSearchField1 = field1TextField.text!.replacingOccurrences(of: " ", with: "%20")
+                // safer to do this percent encoding conversion instead
+                let validSearchField1 = field1Label.text!.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlPathAllowed)!
                 print(validSearchField1)
                 self.urlString = self.urlString.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[0].field)", with: validSearchField1)
                 callApi()
@@ -99,6 +111,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
             }
         case 2:
             if field1TextField.text != "" && field2TextField.text != "" {
+                // update to use percent encoding
                 let validSearchField1 = field1TextField.text!.replacingOccurrences(of: " ", with: "%20")
                 let validSearchField2 = field2TextField.text!.replacingOccurrences(of: " ", with: "%20")
                 self.urlString = self.urlString.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[0].field)", with: validSearchField1)
@@ -107,7 +120,8 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
                 self.selectButton.isEnabled = true
             }
         case 3:
-            if field1TextField.text != "" && field2TextField.text != "" && field3TextField.text != ""{
+            if field1TextField.text != "" && field2TextField.text != "" && field3TextField.text != "" {
+                // update to use percent encoding
                 let validSearchField1 = field1TextField.text!.replacingOccurrences(of: " ", with: "%20")
                 let validSearchField2 = field2TextField.text!.replacingOccurrences(of: " ", with: "%20")
                 let validSearchField3 = field3TextField.text!.replacingOccurrences(of: " ", with: "%20")
@@ -120,9 +134,11 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         default:
             break
         }
+        
         print(self.urlString)
         keyboardHide()
         self.view.endEditing(true)
+        
         return true
     }
     
@@ -130,6 +146,10 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         keyboardShow()
     }
     
+    
+    // This was a decent attempt to make this work. Wasn't in week 1 spec, however.
+    // This also causes the constraints to break, resulting in only sort of what you intended.
+    // but breaking constraints is still considered an error
     func keyboardShow() {
         print("keyboardShow")
         self.field3TextField.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -300).isActive = true
@@ -148,8 +168,9 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
             guard let validFoaas = foaas else { return }
             self.foaas = validFoaas
             DispatchQueue.main.async {
-                let attributedString = NSMutableAttributedString(string: self.foaas.message, attributes: [NSFontAttributeName:UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium)])
-                let fromAttribute = NSMutableAttributedString(string: "\n\n" + self.foaas.subtitle, attributes: [NSForegroundColorAttributeName:UIColor.black, NSFontAttributeName:UIFont.systemFont(ofSize: 24, weight: UIFontWeightThin)])
+                // interesting choice to use NSAttributedString. What made you decide to go this route?
+                let attributedString = NSMutableAttributedString(string: self.foaas.message, attributes: [ NSFontAttributeName : UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium) ])
+                let fromAttribute = NSMutableAttributedString(string: "\n\n" + self.foaas.subtitle, attributes: [ NSForegroundColorAttributeName : UIColor.black, NSFontAttributeName : UIFont.systemFont(ofSize: 24, weight: UIFontWeightThin) ])
                 let paragraphStyle = NSMutableParagraphStyle()
                 paragraphStyle.alignment = .right
                 
@@ -159,9 +180,9 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
                 fromAttribute.addAttribute(NSParagraphStyleAttributeName, value: paragraphStyle, range: range)
                 attributedString.append(fromAttribute)
                 self.fullOperationPrevieTextView.attributedText = attributedString
-                //                self.fullOperationPrevieTextView.text = "\(self.foaas.message)\n\(self.foaas.subtitle)"
+                //  self.fullOperationPrevieTextView.text = "\(self.foaas.message)\n\(self.foaas.subtitle)"
                 print(self.fullOperationPrevieTextView.text)
-                self.fullOperationPrevieTextView.reloadInputViews()
+                //                self.fullOperationPrevieTextView.reloadInputViews() // dont think this is needed
             }
         }
     }
@@ -174,22 +195,5 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         notificationCenter.post(name: Notification.Name(rawValue: "FoaasObjectDidUpdate"), object: nil, userInfo: [ "info" : foaasInfo ])
         //http://stackoverflow.com/questions/24668818/how-to-dismiss-viewcontroller-in-swift
         dismiss(animated: true, completion: nil)
-        //        let foaasViewController: FoaasViewController = FoaasViewController()
-        //        foaasViewController.foaas = self.foaas
-        //        dump(foaasViewController.foaas)
-        
-        //        performSegue(withIdentifier: "returnToFoaasViewControllerSegue", sender: sender)
-        //        let notificationArtist = Notification.Name(rawValue: "searchForArtist")
-        //        NotificationCenter.default.addObserver(forName: notificationArtist, object: nil, queue: nil) { (notification) in
-        //            self.makeSearch()
-        //        }
     }
 }
-
-
-//    - name: "Awesome"
-//    - url: "/awesome/:from"
-//    ▿ fields: 1 element
-//    ▿ From from #1
-//    - name: "From"
-//    - field: "from"

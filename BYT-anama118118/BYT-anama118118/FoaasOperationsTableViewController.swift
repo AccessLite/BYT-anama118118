@@ -19,18 +19,6 @@ class FoaasOperationsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        FoaasAPIManager.getOperations { (arrayOfFoaasOperation: [FoaasOperation]?) in
-//
-//            guard let validArrayOfFoaasOperation = arrayOfFoaasOperation else { return }
-//            self.foaasOperationsArray = validArrayOfFoaasOperation
-
-//            DispatchQueue.main.async {
-//                self.tableView.reloadData()
-//                FoaasDataManager.shared.save(operations: self.foaasOperationsArray)
-//                FoaasDataManager.shared.deleteStoredOperations()
-//            }
-//        }
     }
     
     // MARK: - Table view data source
@@ -40,7 +28,7 @@ class FoaasOperationsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return foaasOperationsArray?.count ?? 0
+        return foaasOperationsArray?.count ?? 0 // nice, this will help to avoid crashes :thumbsup:
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
