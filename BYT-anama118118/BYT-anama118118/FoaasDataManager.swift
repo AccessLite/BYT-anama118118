@@ -28,15 +28,11 @@ class FoaasDataManager {
                 print(error)
             }
         }
-        //Will use flat map over for in loops when ready, the following flatmap has an error eror not handled
-//        do {
-//            let defaultDataArray: [Data] = operations.flatMap{ $0.toData() }
-//        } catch {
-//            print(error)
-//        }
-        
+      
+        // you need to include this assignment, otherwise your app doesn't populate your table view on first-run
+        self.operations = operations
         FoaasDataManager.defaults.set(defaultDataArray,forKey: FoaasDataManager.operationsKey)
-//        print("Saved \(FoaasDataManager.defaults.dictionary(forKey: FoaasDataManager.operationsKey))")
+        print("Saved \(FoaasDataManager.defaults.dictionary(forKey: FoaasDataManager.operationsKey))")
     }
     
     func load() -> Bool {
@@ -45,11 +41,14 @@ class FoaasDataManager {
         }
         self.operations = operationsData.flatMap{ FoaasOperation(data: $0) }
         
-//        print(operations)
+        print("Successfully loaded operations")
         return true
     }
     
     func deleteStoredOperations() {
         FoaasDataManager.defaults.set(nil, forKey: FoaasDataManager.operationsKey)
+        
+        // its good practice to also nil-out the singleton property too
+        self.operations = nil
     }
 }

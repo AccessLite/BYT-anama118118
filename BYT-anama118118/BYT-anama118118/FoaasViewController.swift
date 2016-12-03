@@ -18,23 +18,23 @@ class FoaasViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        DispatchQueue.main.async {
-            self.registerForNotifications()
-            self.view.reloadInputViews()
-        }
-        guard let validFoaas =  self.foaas else {
-            FoaasAPIManager.getFoaas(url: FoaasAPIManager.foaasURL!) { (foaas: Foaas?) in
-                if let validFoaas = foaas {
-                    DispatchQueue.main.async {
-                        self.mainTextLabel.text = foaas?.message
-                        self.subtitleTextLabel.text = "From,\n \(validFoaas.subtitle)"
-                    }
+        self.registerForNotifications()
+        
+        // there's no reason to do a check on self.foaas since it's type Foaas!
+        // you're indicating that you guarantee that FoaasViewController will always have a non-nil value for it
+        
+        // but there's a hidden bug here becuase self.foaas always nil on initial viewDidLoad, and your else statement will always execute.
+        // So in this specific case, you app will not crash, but there's a good chance eventually it will and it will be hard to debug
+        FoaasAPIManager.getFoaas(url: FoaasAPIManager.foaasURL!) { (foaas: Foaas?) in
+            if let validFoaas = foaas {
+                self.foaas = validFoaas
+                DispatchQueue.main.async {
+                    self.mainTextLabel.text = validFoaas.message
+                    self.subtitleTextLabel.text = "From,\n \(validFoaas.subtitle)"
                 }
             }
-            return
         }
-        self.mainTextLabel.text = validFoaas.message
-        self.subtitleTextLabel.text = "From,\n \(validFoaas.subtitle)"
+        
     }
     
     @IBAction func octoButtonTapped(_ sender: UIButton) {
@@ -46,6 +46,7 @@ class FoaasViewController: UIViewController {
         notificationCenter.addObserver(self, selector: #selector(self.updateFoaas(sender:)), name: Notification.Name(rawValue: "FoaasObjectDidUpdate"), object: nil)
     }
     
+    // You also semi-avoid the crash bug listed above by assigning self.foaas to a non-nil value here
     internal func updateFoaas(sender: Notification) {
         if let foaasInfo = sender.userInfo as? [String : [String : AnyObject]] {
             if let info = foaasInfo["info"] {
@@ -53,7 +54,6 @@ class FoaasViewController: UIViewController {
                 guard let validFoaas = self.foaas else { return }
                 self.mainTextLabel.text = validFoaas.message
                 self.subtitleTextLabel.text = "From,\n \(validFoaas.subtitle)"
-                self.view.reloadInputViews()
             }
         }
     }

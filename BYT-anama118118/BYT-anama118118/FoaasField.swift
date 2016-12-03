@@ -39,10 +39,3 @@ class FoaasField: JSONConvertible, CustomStringConvertible {
     }
     
 }
-
-//"fields": [
-//{
-//"name": "From",
-//"field": "from"
-//}
-//]
