@@ -34,7 +34,15 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var selectButton: UIBarButtonItem!
     
-    var urlString: String = "http://www.foaas.com"
+    var field1: String = ""
+    var field2: String = ""
+    var field3: String = ""
+    var urlString: String {
+        get {
+            return "http://www.foaas.com\(self.foaasOperationSelected.url)"
+        }
+    }
+    
     var editingTextField: Int = 0
     
     override func viewDidLoad() {
@@ -42,13 +50,10 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         self.field1TextField.delegate = self
         self.field2TextField.delegate = self
         self.field3TextField.delegate = self
-
-        self.urlString = "http://www.foaas.com\(self.foaasOperationSelected.url)"
         
         callApi()
         fieldLabelAndTextFieldSetUP()
         
-        // we do want to allow for someone to hit < Back here, though I realize it wasn't in the storyboard I gave you.
         self.navigationItem.hidesBackButton = false
     }
 
@@ -93,82 +98,72 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    // Text fields will not update if one of them is missing text and you press "Return", which is one reason you should
-    // also use didFinishEditing
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.urlString = "http://www.foaas.com\(self.foaasOperationSelected.url)"
-        switch self.foaasOperationSelected.fields.count{
-
-        // I'd like to see these cases refactored in some way
-        case 1:
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
+        textFieldDidEndEditing(textField)
+        keyboardWillHide()
+        self.view.endEditing(true)
+        return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        switch textField {
+        case field1TextField:
             if field1TextField.text != "" {
-                // safer to do this percent encoding conversion instead
-                let validSearchField1 = field1Label.text!.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlPathAllowed)!
-                print(validSearchField1)
-                self.urlString = self.urlString.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[0].field)", with: validSearchField1)
-                callApi()
-                self.selectButton.isEnabled = true
+                self.field1 = field1TextField.text!.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlPathAllowed)!
             }
-        case 2:
-            if field1TextField.text != "" && field2TextField.text != "" {
-                // update to use percent encoding
-                let validSearchField1 = field1TextField.text!.replacingOccurrences(of: " ", with: "%20")
-                let validSearchField2 = field2TextField.text!.replacingOccurrences(of: " ", with: "%20")
-                self.urlString = self.urlString.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[0].field)", with: validSearchField1)
-                self.urlString = self.urlString.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[1].field)", with: validSearchField2)
-                callApi()
-                self.selectButton.isEnabled = true
+        case field2TextField:
+            if field2TextField.text != "" {
+                self.field2 = field2TextField.text!.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlPathAllowed)!
             }
-        case 3:
-            if field1TextField.text != "" && field2TextField.text != "" && field3TextField.text != "" {
-                // update to use percent encoding
-                let validSearchField1 = field1TextField.text!.replacingOccurrences(of: " ", with: "%20")
-                let validSearchField2 = field2TextField.text!.replacingOccurrences(of: " ", with: "%20")
-                let validSearchField3 = field3TextField.text!.replacingOccurrences(of: " ", with: "%20")
-                self.urlString = self.urlString.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[0].field)", with: validSearchField1)
-                self.urlString = self.urlString.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[1].field)", with: validSearchField2)
-                self.urlString = self.urlString.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[2].field)", with: validSearchField3)
-                callApi()
-                self.selectButton.isEnabled = true
+        case field3TextField:
+            if field3TextField.text != "" {
+                self.field3 = field3TextField.text!.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlPathAllowed)!
             }
         default:
             break
         }
-        
-        print(self.urlString)
-        keyboardHide()
+        callApi()
+        keyboardWillHide()
         self.view.endEditing(true)
-        
-        return true
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        keyboardShow()
+        keyboardWillShow()
     }
-    
-    
+
     // This was a decent attempt to make this work. Wasn't in week 1 spec, however.
     // This also causes the constraints to break, resulting in only sort of what you intended.
     // but breaking constraints is still considered an error
-    func keyboardShow() {
+    func keyboardWillShow() {
         print("keyboardShow")
         self.field3TextField.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -300).isActive = true
 //        view.frame = CGRect(x: view.frame.origin.x, y: yValue  - 150, width: view.frame.size.width, height: view.frame.size.height)
     }
     
-    func keyboardHide() {
+    func keyboardWillHide() {
         print("keyboardHide")
         self.field3TextField.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 20).isActive = true
 //        view.frame = CGRect(x: view.frame.origin.x, y: yValue, width: view.frame.size.width, height: view.frame.size.height)
     }
     
     func callApi() {
-        guard let url = URL(string: self.urlString) else { return }
+        var replacedValueUrl = self.urlString
+        if self.field1 != "" {
+           replacedValueUrl = replacedValueUrl.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[0].field)", with: self.field1)
+        }
+        if self.field2 != "" {
+           replacedValueUrl = replacedValueUrl.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[1].field)", with: self.field2)
+        }
+        if self.field3 != "" {
+            replacedValueUrl = replacedValueUrl.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[2].field)", with: self.field3)
+        }
+        
+        guard let url = URL(string: replacedValueUrl) else { return }
         FoaasAPIManager.getFoaas(url: url) { (foaas: Foaas?) in
             guard let validFoaas = foaas else { return }
             self.foaas = validFoaas
             DispatchQueue.main.async {
-                // interesting choice to use NSAttributedString. What made you decide to go this route?
+                // interesting choice to use NSAttributedString. What made you decide to go this route? Because it will shown in the same textView
                 let attributedString = NSMutableAttributedString(string: self.foaas.message, attributes: [ NSFontAttributeName : UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium) ])
                 let fromAttribute = NSMutableAttributedString(string: "\n\n" + self.foaas.subtitle, attributes: [ NSForegroundColorAttributeName : UIColor.black, NSFontAttributeName : UIFont.systemFont(ofSize: 24, weight: UIFontWeightThin) ])
                 let paragraphStyle = NSMutableParagraphStyle()
@@ -182,7 +177,6 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
                 self.fullOperationPrevieTextView.attributedText = attributedString
                 //  self.fullOperationPrevieTextView.text = "\(self.foaas.message)\n\(self.foaas.subtitle)"
                 print(self.fullOperationPrevieTextView.text)
-                //                self.fullOperationPrevieTextView.reloadInputViews() // dont think this is needed
             }
         }
     }

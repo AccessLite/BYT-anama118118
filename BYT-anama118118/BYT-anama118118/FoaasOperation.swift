@@ -10,12 +10,8 @@ import Foundation
 import UIKit
 
 enum FoaasOperationModelParseError: Error {
-    // your naming here needs adjustment
-    // if it's an error, i would name it something more like:
-    // invalidJson
-    // invalidFoaasOperation
-    case validJson
-    case validFoaasOperation
+    case invalidJson
+    case invalidFoaasOperation
 }
 
 class FoaasOperation: JSONConvertible, DataConvertible{
@@ -56,17 +52,17 @@ class FoaasOperation: JSONConvertible, DataConvertible{
             let json = try JSONSerialization.jsonObject(with: data, options: [])
             
             guard let dict = json as? [String : AnyObject] else {
-                throw FoaasOperationModelParseError.validJson
+                throw FoaasOperationModelParseError.invalidJson
             }
             
             guard let validFoaasOperation = FoaasOperation(json: dict) else {
-                throw FoaasOperationModelParseError.validFoaasOperation
+                throw FoaasOperationModelParseError.invalidFoaasOperation
             }
             
             self.fields = validFoaasOperation.fields
             self.name = validFoaasOperation.name
             self.url = validFoaasOperation.url
-        }catch FoaasOperationModelParseError.validJson {
+        }catch FoaasOperationModelParseError.invalidJson {
             print("Pring error in parsing validJson")
         } catch {
             print(error)

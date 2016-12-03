@@ -25,6 +25,8 @@ class FoaasViewController: UIViewController {
         
         // but there's a hidden bug here becuase self.foaas always nil on initial viewDidLoad, and your else statement will always execute.
         // So in this specific case, you app will not crash, but there's a good chance eventually it will and it will be hard to debug
+        
+        //I was doing a check on self.foaas because I wass user defaults. If it has values already, it won't run the API call.
         FoaasAPIManager.getFoaas(url: FoaasAPIManager.foaasURL!) { (foaas: Foaas?) in
             if let validFoaas = foaas {
                 self.foaas = validFoaas
