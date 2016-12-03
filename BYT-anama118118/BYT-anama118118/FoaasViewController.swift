@@ -40,6 +40,17 @@ class FoaasViewController: UIViewController {
     }
     
     @IBAction func octoButtonTapped(_ sender: UIButton) {
+        // create references to the different transforms
+        let newTransform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        let originalTransform = sender.imageView!.transform
+        
+        UIView.animate(withDuration: 0.1, animations: {
+            // animate to newTransform
+            sender.imageView!.transform = newTransform
+            }, completion: { (complete) in
+                // return to original transform
+                sender.imageView!.transform = originalTransform
+        })
         performSegue(withIdentifier: "foaasOperationsTableViewControllerSegue", sender: sender)
     }
     

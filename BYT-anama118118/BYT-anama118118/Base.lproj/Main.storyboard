@@ -212,6 +212,7 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="bottomToKeyboardLayout" destination="36A-O0-ID4" id="WKk-gy-WBD"/>
                         <outlet property="field1Label" destination="2x0-Md-wz8" id="IaP-NK-QnA"/>
                         <outlet property="field1TextField" destination="1WG-Xj-xPc" id="0uM-eE-PSE"/>
                         <outlet property="field2Label" destination="1jn-pP-sGl" id="Ht7-by-hQc"/>

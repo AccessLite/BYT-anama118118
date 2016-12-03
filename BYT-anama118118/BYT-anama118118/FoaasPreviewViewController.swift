@@ -18,7 +18,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     var foaasOperationSelected: FoaasOperation!
     var foaas: Foaas!
     
-    // why lazy?
+    // why lazy? Because the compiler doesn't complain
     lazy var yValue: CGFloat = {
         return self.view.frame.origin.y
     }()
@@ -33,6 +33,8 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var field3TextField: UITextField!
     
     @IBOutlet weak var selectButton: UIBarButtonItem!
+    
+    @IBOutlet weak var bottomToKeyboardLayout: NSLayoutConstraint!
     
     var field1: String = ""
     var field2: String = ""
@@ -54,7 +56,11 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         callApi()
         fieldLabelAndTextFieldSetUP()
         
-        self.navigationItem.hidesBackButton = false
+        let notificationCenter = NotificationCenter.default
+        
+        notificationCenter.addObserver(self, selector: #selector(self.UIKeyboardWillShowNotification), name: Notification.Name(rawValue: "UIKeyboardWillShowNotification"), object: nil)
+        
+        notificationCenter.addObserver(self, selector: #selector(self.UIKeyboardWillHideNotification), name: Notification.Name(rawValue: "UIKeyboardWillHideNotification"), object: nil)
     }
 
     func fieldLabelAndTextFieldSetUP() {
@@ -100,7 +106,8 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         textFieldDidEndEditing(textField)
-        keyboardWillHide()
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.post(name: Notification.Name(rawValue: "UIKeyboardWillHideNotification"), object: nil)
         self.view.endEditing(true)
         return true
     }
@@ -123,26 +130,36 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
             break
         }
         callApi()
-        keyboardWillHide()
+        
+        
+        self.navigationItem.hidesBackButton = false
+        
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.post(name: Notification.Name(rawValue: "UIKeyboardWillHideNotification"), object: nil)
         self.view.endEditing(true)
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        keyboardWillShow()
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.post(name: Notification.Name(rawValue: "UIKeyboardWillShowNotification"), object: nil)
     }
 
     // This was a decent attempt to make this work. Wasn't in week 1 spec, however.
     // This also causes the constraints to break, resulting in only sort of what you intended.
     // but breaking constraints is still considered an error
-    func keyboardWillShow() {
+    func UIKeyboardWillShowNotification() {
         print("keyboardShow")
-        self.field3TextField.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -300).isActive = true
+        self.bottomToKeyboardLayout.constant = 300
+        self.view.updateConstraints()
+//        self.field3TextField.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -300).isActive = true
 //        view.frame = CGRect(x: view.frame.origin.x, y: yValue  - 150, width: view.frame.size.width, height: view.frame.size.height)
     }
     
-    func keyboardWillHide() {
+    func UIKeyboardWillHideNotification() {
         print("keyboardHide")
-        self.field3TextField.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 20).isActive = true
+        self.bottomToKeyboardLayout.constant = 125
+        self.view.updateConstraints()
+//        self.field3TextField.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 20).isActive = true
 //        view.frame = CGRect(x: view.frame.origin.x, y: yValue, width: view.frame.size.width, height: view.frame.size.height)
     }
     
@@ -163,7 +180,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
             guard let validFoaas = foaas else { return }
             self.foaas = validFoaas
             DispatchQueue.main.async {
-                // interesting choice to use NSAttributedString. What made you decide to go this route? Because it will shown in the same textView
+                // interesting choice to use NSAttributedString. What made you decide to go this route? Because the text is able to be in the same textView
                 let attributedString = NSMutableAttributedString(string: self.foaas.message, attributes: [ NSFontAttributeName : UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium) ])
                 let fromAttribute = NSMutableAttributedString(string: "\n\n" + self.foaas.subtitle, attributes: [ NSForegroundColorAttributeName : UIColor.black, NSFontAttributeName : UIFont.systemFont(ofSize: 24, weight: UIFontWeightThin) ])
                 let paragraphStyle = NSMutableParagraphStyle()
