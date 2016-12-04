@@ -36,6 +36,8 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var bottomToKeyboardLayout: NSLayoutConstraint!
     
+    @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
+    
     var field1: String = ""
     var field2: String = ""
     var field3: String = ""
@@ -61,6 +63,9 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         notificationCenter.addObserver(self, selector: #selector(self.UIKeyboardWillShowNotification), name: Notification.Name(rawValue: "UIKeyboardWillShowNotification"), object: nil)
         
         notificationCenter.addObserver(self, selector: #selector(self.UIKeyboardWillHideNotification), name: Notification.Name(rawValue: "UIKeyboardWillHideNotification"), object: nil)
+
+        //http://stackoverflow.com/questions/32281651/how-to-dismiss-keyboard-when-touching-anywhere-outside-uitextfield-in-swift
+        view.addGestureRecognizer(self.tapGestureRecognizer)
     }
 
     func fieldLabelAndTextFieldSetUP() {
@@ -144,9 +149,6 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         notificationCenter.post(name: Notification.Name(rawValue: "UIKeyboardWillShowNotification"), object: nil)
     }
 
-    // This was a decent attempt to make this work. Wasn't in week 1 spec, however.
-    // This also causes the constraints to break, resulting in only sort of what you intended.
-    // but breaking constraints is still considered an error
     func UIKeyboardWillShowNotification() {
         print("keyboardShow")
         self.bottomToKeyboardLayout.constant = 300
@@ -161,6 +163,10 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         self.view.updateConstraints()
 //        self.field3TextField.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 20).isActive = true
 //        view.frame = CGRect(x: view.frame.origin.x, y: yValue, width: view.frame.size.width, height: view.frame.size.height)
+    }
+    
+    @IBAction func tapGestureDismissKeyboard(_ sender: UITapGestureRecognizer) {
+        self.view.endEditing(true)
     }
     
     func callApi() {
@@ -180,7 +186,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
             guard let validFoaas = foaas else { return }
             self.foaas = validFoaas
             DispatchQueue.main.async {
-                // interesting choice to use NSAttributedString. What made you decide to go this route? Because the text is able to be in the same textView
+                // interesting choice to use NSAttributedString. What made you decide to go this route? Because the text is able to be in the same textView, and the self.foaas.subtitle is 80% of the self.foaas.message in size
                 let attributedString = NSMutableAttributedString(string: self.foaas.message, attributes: [ NSFontAttributeName : UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium) ])
                 let fromAttribute = NSMutableAttributedString(string: "\n\n" + self.foaas.subtitle, attributes: [ NSForegroundColorAttributeName : UIColor.black, NSFontAttributeName : UIFont.systemFont(ofSize: 24, weight: UIFontWeightThin) ])
                 let paragraphStyle = NSMutableParagraphStyle()

@@ -13,6 +13,8 @@ class FoaasViewController: UIViewController {
     @IBOutlet weak var mainTextLabel: UILabel!
     @IBOutlet weak var subtitleTextLabel: UILabel!
     @IBOutlet weak var octoButton: UIButton!
+    @IBOutlet var shareGestureRecognizer: UITapGestureRecognizer!
+    @IBOutlet var screenShotLongPressGestureRecognizer: UILongPressGestureRecognizer!
     
     var foaas: Foaas!
     
@@ -36,7 +38,7 @@ class FoaasViewController: UIViewController {
                 }
             }
         }
-        
+        self.view.addGestureRecognizer(self.shareGestureRecognizer)
     }
     
     @IBAction func octoButtonTapped(_ sender: UIButton) {
@@ -70,4 +72,40 @@ class FoaasViewController: UIViewController {
             }
         }
     }
+    
+    @IBAction func shareText(_ sender: AnyObject) {
+        var arrayToShare: [String] = []
+        arrayToShare.append(self.foaas.message)
+        arrayToShare.append(self.foaas.subtitle)
+    
+        let activityViewController = UIActivityViewController(activityItems: arrayToShare, applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        
+        self.present(activityViewController, animated: true, completion: nil)
+    }
+    
+    @IBAction func screenShot(_ sender: AnyObject) {
+        guard let vaidImage = getScreenShotImage(view: self.view) else { return }
+        //https://developer.apple.com/reference/uikit/1619125-uiimagewritetosavedphotosalbum
+        UIImageWriteToSavedPhotosAlbum(vaidImage, nil, nil, nil)
+        
+        //https://developer.apple.com/reference/uikit/uialertcontroller
+        let alertController = UIAlertController(title: "Successfully saved screenshot to photo library", message: nil , preferredStyle: UIAlertControllerStyle.alert)
+        present(alertController, animated: true, completion: nil)
+        alertController.dismiss(animated: true, completion: nil)
+        
+    }
+    
+    func getScreenShotImage(view: UIView) -> UIImage? {
+        //https://developer.apple.com/reference/uikit/1623912-uigraphicsbeginimagecontextwitho
+        UIGraphicsBeginImageContextWithOptions(view.bounds.size, true, view.layer.contentsScale)
+        guard let context = UIGraphicsGetCurrentContext() else{
+            return nil
+        }
+        view.layer.render(in: context)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
+    }
+    
 }
