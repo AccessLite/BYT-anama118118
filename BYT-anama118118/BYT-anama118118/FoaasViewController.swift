@@ -87,13 +87,7 @@ class FoaasViewController: UIViewController {
     @IBAction func screenShot(_ sender: AnyObject) {
         guard let vaidImage = getScreenShotImage(view: self.view) else { return }
         //https://developer.apple.com/reference/uikit/1619125-uiimagewritetosavedphotosalbum
-        UIImageWriteToSavedPhotosAlbum(vaidImage, nil, nil, nil)
-        
-        //https://developer.apple.com/reference/uikit/uialertcontroller
-        let alertController = UIAlertController(title: "Successfully saved screenshot to photo library", message: nil , preferredStyle: UIAlertControllerStyle.alert)
-        present(alertController, animated: true, completion: nil)
-        alertController.dismiss(animated: true, completion: nil)
-        
+        UIImageWriteToSavedPhotosAlbum(vaidImage, self, #selector(createScreenShotCompletion(image: didFinishSavingWithError: contextInfo:)), nil)
     }
     
     func getScreenShotImage(view: UIView) -> UIImage? {
@@ -108,4 +102,21 @@ class FoaasViewController: UIViewController {
         return image
     }
     
+    internal func createScreenShotCompletion(image: UIImage, didFinishSavingWithError: NSError?, contextInfo: UnsafeMutableRawPointer?) {
+        // check if error != nil
+        if didFinishSavingWithError != nil {
+            print("Error in saving image.")
+            // present appropriate message in UIAlertViewController
+            //https://developer.apple.com/reference/uikit/uialertcontroller
+            let alertController = UIAlertController(title: "Failed to save screenshot to photo library", message: nil , preferredStyle: UIAlertControllerStyle.alert)
+            present(alertController, animated: true, completion: nil)
+            alertController.dismiss(animated: true, completion: nil)
+        }
+            // present appropriate message in UIAlertViewController
+            print("Image saved.")
+            let alertController = UIAlertController(title: "Successfully saved screenshot to photo library", message: nil , preferredStyle: UIAlertControllerStyle.alert)
+            present(alertController, animated: true, completion: nil)
+            alertController.dismiss(animated: true, completion: nil)
+            // double check that the image actually gets saved to the camera roll. Not sure how?
+    }    
 }
