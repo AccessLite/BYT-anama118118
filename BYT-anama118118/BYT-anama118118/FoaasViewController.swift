@@ -115,6 +115,9 @@ class FoaasViewController: UIViewController {
             // present appropriate message in UIAlertViewController
             print("Image saved.")
             let alertController = UIAlertController(title: "Successfully saved screenshot to photo library", message: nil , preferredStyle: UIAlertControllerStyle.alert)
+            let okay = UIAlertAction(title: "Okay", style: .cancel, handler: nil)
+            alertController.addAction(okay)
+        
             present(alertController, animated: true, completion: nil)
             alertController.dismiss(animated: true, completion: nil)
             // double check that the image actually gets saved to the camera roll. Not sure how?

@@ -51,4 +51,11 @@ class FoaasDataManager {
         // its good practice to also nil-out the singleton property too
         self.operations = nil
     }
+    
+    internal func requestOperations(_ operations: @escaping ([FoaasOperation]?)->Void) {
+        FoaasAPIManager.getOperations { (foaas: [FoaasOperation]?) in
+            guard let validFoaas = foaas else { return }
+            operations(validFoaas)
+        }
+    }
 }

@@ -54,5 +54,4 @@ class FoaasOperationsTableViewController: UITableViewController {
         dismiss(animated: true, completion: nil)
 //        performSegue(withIdentifier: "octoCuteTappedToFoaasViewControllerSegue", sender: sender)
     }
-
 }
