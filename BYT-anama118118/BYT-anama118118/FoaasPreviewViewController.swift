@@ -182,7 +182,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         }
         
         guard let url = URL(string: replacedValueUrl) else { return }
-        FoaasAPIManager.getFoaas(url: url) { (foaas: Foaas?) in
+        FoaasDataManager.shared.requestFoaas(url: url) { (foaas: Foaas?) in
             guard let validFoaas = foaas else { return }
             self.foaas = validFoaas
             DispatchQueue.main.async {

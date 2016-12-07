@@ -17,6 +17,8 @@ class FoaasDataManager {
     private static let defaults = UserDefaults.standard
     internal private(set) var operations: [FoaasOperation]?
     
+    static let foaasURL = URL(string: "http://www.foaas.com/awesome/louis")
+    
     func save(operations: [FoaasOperation]) {
         var defaultDataArray: [Data] = []
         for operation in operations {
@@ -54,8 +56,20 @@ class FoaasDataManager {
     
     internal func requestOperations(_ operations: @escaping ([FoaasOperation]?)->Void) {
         FoaasAPIManager.getOperations { (foaas: [FoaasOperation]?) in
-            guard let validFoaas = foaas else { return }
-            operations(validFoaas)
+            operations(foaas)
         }
     }
+    
+    internal func requestFoaas(url: URL, _ operations: @escaping (Foaas?) -> Void) {
+        FoaasAPIManager.getFoaas(url: url) { (foaas: Foaas?) in
+            operations(foaas)
+        }
+    }
+    
+    internal func requestData(endpoint: String, _ operations: @escaping (Data?) -> Void) {
+        FoaasAPIManager.getData(endpoint: endpoint) { (data: Data?) in
+            operations(data)
+        }
+    }
+    
 }
