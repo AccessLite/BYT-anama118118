@@ -17,6 +17,8 @@ class FoaasOperationsTableViewController: UITableViewController {
     
     var detailFoaasOperationsViewSegue = "detailFoaasOperationsViewSegue"
     
+    @IBOutlet weak var foulLanguageFilterSwitch: UISwitch!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -33,17 +35,22 @@ class FoaasOperationsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "FoaasOperationCellIdentifier", for: indexPath)
-        cell.textLabel?.text = foaasOperationsArray?[indexPath.row].name
+        var text = foaasOperationsArray?[indexPath.row].name
+        if self.foulLanguageFilterSwitch.isOn {
+            text = LanguageFilter.filterFoulLanguage(text: (foaasOperationsArray?[indexPath.row].name)!)
+        }
+        cell.textLabel?.text = text
         return cell
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == detailFoaasOperationsViewSegue {
-            let FoaasPreviewViewController = segue.destination as! FoaasPreviewViewController
+            let foaasPreviewViewController = segue.destination as! FoaasPreviewViewController
             if let cell = sender as? UITableViewCell {
                 if let indexPath = tableView.indexPath(for: cell) {
                     let foaasOperationSelected = foaasOperationsArray?[indexPath.row]
-                    FoaasPreviewViewController.foaasOperationSelected = foaasOperationSelected
+                    foaasPreviewViewController.foaasOperationSelected = foaasOperationSelected
+                    foaasPreviewViewController.filterIsOn = foulLanguageFilterSwitch.isOn
                     dump(foaasOperationSelected)
                 }
             }
@@ -54,4 +61,10 @@ class FoaasOperationsTableViewController: UITableViewController {
         dismiss(animated: true, completion: nil)
 //        performSegue(withIdentifier: "octoCuteTappedToFoaasViewControllerSegue", sender: sender)
     }
+    
+    @IBAction func foulLanguageFilterSwitch(_ sender: UISwitch) {
+        self.tableView.reloadData()
+    }
+
+    
 }

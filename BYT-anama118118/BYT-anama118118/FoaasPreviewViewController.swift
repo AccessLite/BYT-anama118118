@@ -12,12 +12,22 @@ import UIKit
  
  The preview updating only works if you press the return key on the keyboard. I'd like to see didEndEditing implemented as well to do this
  
+ Q1: Am I using the FoaasPathBuilder Correctly?
+ Q2: I didn't use the indexOf(key: String) -> Int?, can I use it somewhere in my code?
+ Q3: What does it mean that we need to create a master/ develop/ feature branch? 
+    Is it just like creaking a develop branch? What about the feature part?
+ Q4. What does the following message mean?
+    "You’ve been added to the Foaas Week 2 team for the AccessLite organization. Foaas Week 2 has 2 members and gives pull access to 1 AccessLite repository.
+    View Foaas Week 2: https://github.com/orgs/AccessLite/teams/foaas-week-2
+    Read more about team permissions here: https://help.github.com/articles/what-are-the-different-access-permissions"
+ 
  */
 class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     
     var foaasOperationSelected: FoaasOperation!
     var foaas: Foaas!
     var foaasPath: FoaasPathBuilder?
+    var filterIsOn: Bool = true
     
     @IBOutlet weak var fullOperationPrevieTextView: UITextView!
     
@@ -32,9 +42,10 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var bottomToKeyboardLayout: NSLayoutConstraint!
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
     
-    var editingTextField: Int = 0
+//    var editingTextField: Int = 0
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         self.foaasPath = FoaasPathBuilder(operation: self.foaasOperationSelected)
         
@@ -152,17 +163,23 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     
     func callApi() {
         guard let validFoaasPath = self.foaasPath else { return }
-        let validUrlString = validFoaasPath.build()
         let urlBase = "http://www.foaas.com"
+        let validUrlString = validFoaasPath.build()
         
         guard let url = URL(string: urlBase + validUrlString) else { return }
         FoaasDataManager.shared.requestFoaas(url: url) { (foaas: Foaas?) in
             guard let validFoaas = foaas else { return }
             self.foaas = validFoaas
+            var message = self.foaas.message
+            var subtitle = self.foaas.subtitle
+            if self.filterIsOn {
+                message = LanguageFilter.filterFoulLanguage(text: self.foaas.message)
+                subtitle = LanguageFilter.filterFoulLanguage(text: self.foaas.subtitle)
+            }
             DispatchQueue.main.async {
                 // interesting choice to use NSAttributedString. What made you decide to go this route? Because the text is able to be in the same textView, and the self.foaas.subtitle is 80% of the self.foaas.message in size
-                let attributedString = NSMutableAttributedString(string: self.foaas.message, attributes: [ NSFontAttributeName : UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium) ])
-                let fromAttribute = NSMutableAttributedString(string: "\n\n" + self.foaas.subtitle, attributes: [ NSForegroundColorAttributeName : UIColor.black, NSFontAttributeName : UIFont.systemFont(ofSize: 24, weight: UIFontWeightThin) ])
+                let attributedString = NSMutableAttributedString(string: message, attributes: [ NSFontAttributeName : UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium) ])
+                let fromAttribute = NSMutableAttributedString(string: "\n\n" + subtitle, attributes: [ NSForegroundColorAttributeName : UIColor.black, NSFontAttributeName : UIFont.systemFont(ofSize: 24, weight: UIFontWeightThin) ])
                 let paragraphStyle = NSMutableParagraphStyle()
                 paragraphStyle.alignment = .right
                 
@@ -171,6 +188,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
                 
                 fromAttribute.addAttribute(NSParagraphStyleAttributeName, value: paragraphStyle, range: range)
                 attributedString.append(fromAttribute)
+                
                 self.fullOperationPrevieTextView.attributedText = attributedString
                 print(self.fullOperationPrevieTextView.text)
             }
@@ -181,8 +199,59 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     @IBAction func selectBarBottonTapped(_ sender: UIBarButtonItem) {
         let foaasInfo: [String : AnyObject] = self.foaas.toJson()
         let notificationCenter = NotificationCenter.default
-        notificationCenter.post(name: Notification.Name(rawValue: "FoaasObjectDidUpdate"), object: nil, userInfo: [ "info" : foaasInfo ])
+        notificationCenter.post(name: Notification.Name(rawValue: "FoaasObjectDidUpdate"), object: nil, userInfo: [ "info" : foaasInfo , "filterStatus": self.filterIsOn])
         //http://stackoverflow.com/questions/24668818/how-to-dismiss-viewcontroller-in-swift
         dismiss(animated: true, completion: nil)
     }
+    
+}
+
+class LanguageFilter {
+    static func filterFoulLanguage(text: String) -> String {
+        //Ballmer
+        //cocksplate
+        //Fucking
+        //keep
+        ////You think
+        ////This guy
+        var stringToReturn = text
+        let foulLanguageArr = ["fuck", "fuck.", "fuck?", "fuck‽", "fuck-nugget.", "fuckin'", "fucks", "fucks.", "fucks',", "fucking", "fuckity", "dick", "dickface.", "dicks", "dicks.", "cock", "cocks", "cocks.", "cocksplat", "asshole" ,"asshole..." , "foxtrot", "dickface", "perkeleen", "vittupää", "crap", "motherfucker", "motherfucker,", "motherfuck", "fucktard", "Dick","Fuck", "Fuck's", "Fucks", "Fucking", "Fuckity", "Fick", "Cock", "Cocks", "Cocksplat", "Asshole", "Foxtrot", "Dickface", "Perkeleen", "Vittupää", "Crap", "Motherfucker", "Motherfuck", "Fucktard", "Fucktard!"]
+        
+        for f in foulLanguageArr {
+            let wordsArr = stringToReturn.components(separatedBy: " ")
+            var fString = ""
+            if wordsArr.contains(f) {
+                fString = multateFoulLanguage(word: f)
+                let string = wordsArr.joined(separator: " ")
+                stringToReturn = string.replacingOccurrences(of: f, with: fString)
+            }
+        }
+        return stringToReturn
+        
+//        let wordsArr = text.components(separatedBy: " ")
+//        for w in wordsArr {
+//            var fString = ""
+//            if foulLanguageArr.contains(w){
+//                fString = multateFoulLanguage(word: w)
+//                let string = wordsArr.joined(separator: " ")
+//                stringToReturn = string.replacingOccurrences(of: w, with: fString)
+//            }
+//        }
+//        return stringToReturn
+    }
+    
+    static func multateFoulLanguage(word: String) -> String {
+        var muatedString = ""
+        var counter = 0
+        for character in word.characters {
+            if (character == "a" || character == "e" || character == "i" || character == "o" || character == "u") && counter == 0 {
+                muatedString += "*"
+                counter += 1
+            } else {
+                muatedString += "\(character)"
+            }
+        }
+        return muatedString
+    }
+
 }

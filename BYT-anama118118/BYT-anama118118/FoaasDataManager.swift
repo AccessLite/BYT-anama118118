@@ -17,7 +17,7 @@ class FoaasDataManager {
     private static let defaults = UserDefaults.standard
     internal private(set) var operations: [FoaasOperation]?
     
-    static let foaasURL = URL(string: "http://www.foaas.com/awesome/louis")
+    static let foaasURL = URL(string: "http://www.foaas.com/awesome/Someone")
     
     func save(operations: [FoaasOperation]) {
         var defaultDataArray: [Data] = []
@@ -71,5 +71,4 @@ class FoaasDataManager {
             operations(data)
         }
     }
-    
 }

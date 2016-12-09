@@ -17,6 +17,7 @@ class FoaasViewController: UIViewController {
     @IBOutlet var screenShotLongPressGestureRecognizer: UILongPressGestureRecognizer!
     
     var foaas: Foaas?
+    var filterIsOn: Bool = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,9 +33,15 @@ class FoaasViewController: UIViewController {
         FoaasDataManager.shared.requestFoaas(url: FoaasDataManager.foaasURL!) { (foaas: Foaas?) in
             if let validFoaas = foaas {
                 self.foaas = validFoaas
+                var message = validFoaas.message
+                var subtitle = validFoaas.subtitle
+                if self.filterIsOn {
+                    message = LanguageFilter.filterFoulLanguage(text: message)
+                    subtitle = LanguageFilter.filterFoulLanguage(text: subtitle)
+                }
                 DispatchQueue.main.async {
-                    self.mainTextLabel.text = validFoaas.message
-                    self.subtitleTextLabel.text = "From,\n \(validFoaas.subtitle)"
+                    self.mainTextLabel.text = message
+                    self.subtitleTextLabel.text = "From,\n \(subtitle)"
                 }
             }
         }
@@ -63,12 +70,20 @@ class FoaasViewController: UIViewController {
     
     // You also semi-avoid the crash bug listed above by assigning self.foaas to a non-nil value here
     internal func updateFoaas(sender: Notification) {
-        if let foaasInfo = sender.userInfo as? [String : [String : AnyObject]] {
-            if let info = foaasInfo["info"] {
+        if let foaasInfo = sender.userInfo as? [String : AnyObject] {
+            if let info = foaasInfo["info"] as? [String : AnyObject],
+                let filterStatus = foaasInfo["filterStatus"] as? Bool{
                 self.foaas = Foaas(json: info)!
+                self.filterIsOn = filterStatus
                 guard let validFoaas = self.foaas else { return }
-                self.mainTextLabel.text = validFoaas.message
-                self.subtitleTextLabel.text = "From,\n \(validFoaas.subtitle)"
+                var message = validFoaas.message
+                var subtitle = validFoaas.subtitle
+                if self.filterIsOn {
+                    message = LanguageFilter.filterFoulLanguage(text: validFoaas.message)
+                    subtitle = LanguageFilter.filterFoulLanguage(text: validFoaas.subtitle)
+                }
+                self.mainTextLabel.text = message
+                self.subtitleTextLabel.text = "From,\n \(subtitle)"
             }
         }
     }

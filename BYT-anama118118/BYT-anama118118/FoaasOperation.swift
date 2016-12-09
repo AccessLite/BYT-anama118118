@@ -50,15 +50,12 @@ class FoaasOperation: JSONConvertible, DataConvertible{
     required init? (data: Data){
         do {
             let json = try JSONSerialization.jsonObject(with: data, options: [])
-            
             guard let dict = json as? [String : AnyObject] else {
                 throw FoaasOperationModelParseError.invalidJson
             }
-            
             guard let validFoaasOperation = FoaasOperation(json: dict) else {
                 throw FoaasOperationModelParseError.invalidFoaasOperation
             }
-            
             self.fields = validFoaasOperation.fields
             self.name = validFoaasOperation.name
             self.url = validFoaasOperation.url

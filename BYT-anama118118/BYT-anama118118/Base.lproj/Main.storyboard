@@ -123,6 +123,14 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="dtF-us-t2o">
+                        <nil key="title"/>
+                        <switch key="titleView" opaque="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="pzB-JM-0fx">
+                            <rect key="frame" x="162" y="7" width="51" height="31"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <connections>
+                                <action selector="foulLanguageFilterSwitch:" destination="feB-ik-oAL" eventType="valueChanged" id="zSB-c1-RvM"/>
+                            </connections>
+                        </switch>
                         <barButtonItem key="rightBarButtonItem" title="Done" style="done" id="dfm-ng-gS7">
                             <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
@@ -130,6 +138,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="foulLanguageFilterSwitch" destination="pzB-JM-0fx" id="Z3U-Hd-WLJ"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OsM-dM-4Tb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

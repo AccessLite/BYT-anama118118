@@ -28,6 +28,14 @@ class FoaasField: JSONConvertible, CustomStringConvertible {
             let field = json["field"] as? String {
             self.name = name
             self.field = field
+        } else if let noun = json["noun"] as? String,
+            let field = json["field"] as? String {
+            self.name = noun
+            self.field = field
+        } else if let from = json["from"] as? String,
+            let field = json ["field"] as? String {
+            self.name = from
+            self.field = field
         } else {
             return nil
         }
