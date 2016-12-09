@@ -16,7 +16,7 @@ class FoaasViewController: UIViewController {
     @IBOutlet var shareGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet var screenShotLongPressGestureRecognizer: UILongPressGestureRecognizer!
     
-    var foaas: Foaas!
+    var foaas: Foaas?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,9 +74,10 @@ class FoaasViewController: UIViewController {
     }
     
     @IBAction func shareText(_ sender: AnyObject) {
+        guard let validFoaas = self.foaas else { return }
         var arrayToShare: [String] = []
-        arrayToShare.append(self.foaas.message)
-        arrayToShare.append(self.foaas.subtitle)
+        arrayToShare.append(validFoaas.message)
+        arrayToShare.append(validFoaas.subtitle)
     
         let activityViewController = UIActivityViewController(activityItems: arrayToShare, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view

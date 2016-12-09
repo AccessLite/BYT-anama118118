@@ -58,43 +58,37 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     }
 
     func fieldLabelAndTextFieldSetUP() {
-        //if time permits, will refactor into swtich statement
-        if foaasOperationSelected.fields.count == 1 {
-            field1Label.isHidden = false
+        guard let validFoaasPath = foaasPath else { return }
+        let keys = validFoaasPath.allKeys()
+        self.field1Label.text = "<\(keys[0])>"
+        field1TextField.placeholder = keys[0]
+        
+        switch validFoaasPath.operationFields.count {
+        case 1:
             field2Label.isHidden = true
             field3Label.isHidden = true
-            field1TextField.isHidden = false
             field2TextField.isHidden = true
             field3TextField.isHidden = true
-            
-            field1Label.text = "<\(foaasOperationSelected.fields[0].name)>"
-            field1TextField.placeholder = foaasOperationSelected.fields[0].name
-        } else if foaasOperationSelected.fields.count == 2 {
-            field1Label.isHidden = false
+        case 2:
             field2Label.isHidden = false
             field3Label.isHidden = true
-            field1TextField.isHidden = false
             field2TextField.isHidden = false
             field3TextField.isHidden = true
             
-            field1Label.text = "<\(foaasOperationSelected.fields[0].name)>"
-            field2Label.text = "<\(foaasOperationSelected.fields[1].name)>"
-            field1TextField.placeholder = foaasOperationSelected.fields[0].name
-            field2TextField.placeholder = foaasOperationSelected.fields[1].name
-        } else {
-            field1Label.isHidden = false
+            field2Label.text = "<\(keys[1])>"
+            field2TextField.placeholder = keys[1]
+        case 3:
             field2Label.isHidden = false
             field3Label.isHidden = false
-            field2TextField.isHidden = false
             field1TextField.isHidden = false
             field3TextField.isHidden = false
             
-            field1Label.text = "<\(foaasOperationSelected.fields[0].name)>"
-            field2Label.text = "<\(foaasOperationSelected.fields[1].name)>"
-            field3Label.text = "<\(foaasOperationSelected.fields[2].name)>"
-            field1TextField.placeholder = foaasOperationSelected.fields[0].name
-            field2TextField.placeholder = foaasOperationSelected.fields[1].name
-            field3TextField.placeholder = foaasOperationSelected.fields[2].name
+            field2Label.text = "<\(keys[1])>"
+            field3Label.text = "<\(keys[2])>"
+            field2TextField.placeholder = keys[1]
+            field3TextField.placeholder = keys[2]
+        default:
+            break
         }
     }
     
@@ -126,9 +120,6 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         }
         
         callApi()
-        
-        self.navigationItem.hidesBackButton = false
-        
         let notificationCenter = NotificationCenter.default
         notificationCenter.post(name: Notification.Name(rawValue: "UIKeyboardWillHideNotification"), object: nil)
         self.view.endEditing(true)
@@ -181,7 +172,6 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
                 fromAttribute.addAttribute(NSParagraphStyleAttributeName, value: paragraphStyle, range: range)
                 attributedString.append(fromAttribute)
                 self.fullOperationPrevieTextView.attributedText = attributedString
-                
                 print(self.fullOperationPrevieTextView.text)
             }
         }
