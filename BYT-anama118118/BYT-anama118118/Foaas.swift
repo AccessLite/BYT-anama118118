@@ -37,10 +37,3 @@ class Foaas: JSONConvertible, CustomStringConvertible{
                  "subtitle": self.subtitle as AnyObject ]
     }
 }
-
-// Enpoint: /awesome/:from
-// GET http://www.foaas.com/awesome/louis
-//{
-//    "message": "This is Fucking Awesome.",
-//    "subtitle": "- louis"
-//}

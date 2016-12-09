@@ -64,7 +64,7 @@ class FoaasPathBuilder {
         print(key,value)
         self.operationFields.updateValue(value, forKey: key)
         dump(self.operationFields)
-//        self.operationFields[key] = value
+        //self.operationFields[key] = value
     }
     
     /**
@@ -82,6 +82,7 @@ class FoaasPathBuilder {
      - returns: The index position of the key if it exists in self.operationFields. `nil` otherwise.
      - seealso: `FoaasPathBuilder.allKeys`
      */
+    ///
     func indexOf(key: String) -> Int? {
         let array = self.operation.url.components(separatedBy: "/:")
         for (index,input) in array.enumerated() {

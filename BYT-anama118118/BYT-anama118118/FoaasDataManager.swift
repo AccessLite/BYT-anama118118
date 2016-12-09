@@ -31,7 +31,6 @@ class FoaasDataManager {
             }
         }
       
-        // you need to include this assignment, otherwise your app doesn't populate your table view on first-run
         self.operations = operations
         FoaasDataManager.defaults.set(defaultDataArray,forKey: FoaasDataManager.operationsKey)
         print("Saved \(FoaasDataManager.defaults.dictionary(forKey: FoaasDataManager.operationsKey))")
@@ -49,8 +48,6 @@ class FoaasDataManager {
     
     func deleteStoredOperations() {
         FoaasDataManager.defaults.set(nil, forKey: FoaasDataManager.operationsKey)
-        
-        // its good practice to also nil-out the singleton property too
         self.operations = nil
     }
     

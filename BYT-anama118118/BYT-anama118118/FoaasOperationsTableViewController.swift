@@ -30,14 +30,14 @@ class FoaasOperationsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return foaasOperationsArray?.count ?? 0 // nice, this will help to avoid crashes :thumbsup:
+        return foaasOperationsArray?.count ?? 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "FoaasOperationCellIdentifier", for: indexPath)
         var text = foaasOperationsArray?[indexPath.row].name
         if self.foulLanguageFilterSwitch.isOn {
-            text = LanguageFilter.filterFoulLanguage(text: (foaasOperationsArray?[indexPath.row].name)!)
+            text = FoulLanguageFilter.filterFoulLanguage(text: (foaasOperationsArray?[indexPath.row].name)!)
         }
         cell.textLabel?.text = text
         return cell
@@ -59,7 +59,6 @@ class FoaasOperationsTableViewController: UITableViewController {
     
     @IBAction func backOctoCuteTapped(_ sender: UIBarButtonItem) {
         dismiss(animated: true, completion: nil)
-//        performSegue(withIdentifier: "octoCuteTappedToFoaasViewControllerSegue", sender: sender)
     }
     
     @IBAction func foulLanguageFilterSwitch(_ sender: UISwitch) {

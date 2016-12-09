@@ -23,21 +23,14 @@ class FoaasViewController: UIViewController {
         super.viewDidLoad()
         self.registerForNotifications()
         
-        // there's no reason to do a check on self.foaas since it's type Foaas!
-        // you're indicating that you guarantee that FoaasViewController will always have a non-nil value for it
-        
-        // but there's a hidden bug here becuase self.foaas always nil on initial viewDidLoad, and your else statement will always execute.
-        // So in this specific case, you app will not crash, but there's a good chance eventually it will and it will be hard to debug
-        
-        //I was doing a check on self.foaas because I wass user defaults. If it has values already, it won't run the API call.
         FoaasDataManager.shared.requestFoaas(url: FoaasDataManager.foaasURL!) { (foaas: Foaas?) in
             if let validFoaas = foaas {
                 self.foaas = validFoaas
                 var message = validFoaas.message
                 var subtitle = validFoaas.subtitle
                 if self.filterIsOn {
-                    message = LanguageFilter.filterFoulLanguage(text: message)
-                    subtitle = LanguageFilter.filterFoulLanguage(text: subtitle)
+                    message = FoulLanguageFilter.filterFoulLanguage(text: message)
+                    subtitle = FoulLanguageFilter.filterFoulLanguage(text: subtitle)
                 }
                 DispatchQueue.main.async {
                     self.mainTextLabel.text = message
@@ -48,6 +41,7 @@ class FoaasViewController: UIViewController {
         self.view.addGestureRecognizer(self.shareGestureRecognizer)
     }
     
+    ///Button to performSegue ot FoaasOperationsTableViewController
     @IBAction func octoButtonTapped(_ sender: UIButton) {
         // create references to the different transforms
         let newTransform = CGAffineTransform(scaleX: 0.8, y: 0.8)
@@ -68,7 +62,7 @@ class FoaasViewController: UIViewController {
         notificationCenter.addObserver(self, selector: #selector(self.updateFoaas(sender:)), name: Notification.Name(rawValue: "FoaasObjectDidUpdate"), object: nil)
     }
     
-    // You also semi-avoid the crash bug listed above by assigning self.foaas to a non-nil value here
+    ///Receive the notification of foaasInfo as json and filterStatus as boolean
     internal func updateFoaas(sender: Notification) {
         if let foaasInfo = sender.userInfo as? [String : AnyObject] {
             if let info = foaasInfo["info"] as? [String : AnyObject],
@@ -79,8 +73,8 @@ class FoaasViewController: UIViewController {
                 var message = validFoaas.message
                 var subtitle = validFoaas.subtitle
                 if self.filterIsOn {
-                    message = LanguageFilter.filterFoulLanguage(text: validFoaas.message)
-                    subtitle = LanguageFilter.filterFoulLanguage(text: validFoaas.subtitle)
+                    message = FoulLanguageFilter.filterFoulLanguage(text: validFoaas.message)
+                    subtitle = FoulLanguageFilter.filterFoulLanguage(text: validFoaas.subtitle)
                 }
                 self.mainTextLabel.text = message
                 self.subtitleTextLabel.text = "From,\n \(subtitle)"
@@ -88,6 +82,7 @@ class FoaasViewController: UIViewController {
         }
     }
     
+    ///Allow user to share Foaas message text with tap gesture
     @IBAction func shareText(_ sender: AnyObject) {
         guard let validFoaas = self.foaas else { return }
         var arrayToShare: [String] = []
@@ -100,12 +95,14 @@ class FoaasViewController: UIViewController {
         self.present(activityViewController, animated: true, completion: nil)
     }
     
+    ///Allow user to save screenshot with long press gesture to photo album
     @IBAction func screenShot(_ sender: AnyObject) {
         guard let vaidImage = getScreenShotImage(view: self.view) else { return }
         //https://developer.apple.com/reference/uikit/1619125-uiimagewritetosavedphotosalbum
         UIImageWriteToSavedPhotosAlbum(vaidImage, self, #selector(createScreenShotCompletion(image: didFinishSavingWithError: contextInfo:)), nil)
     }
     
+    ///Get current screenshot
     func getScreenShotImage(view: UIView) -> UIImage? {
         //https://developer.apple.com/reference/uikit/1623912-uigraphicsbeginimagecontextwitho
         UIGraphicsBeginImageContextWithOptions(view.bounds.size, true, view.layer.contentsScale)
@@ -118,17 +115,15 @@ class FoaasViewController: UIViewController {
         return image
     }
     
+    ///Present appropriate Alert by UIAlertViewController, indicating images are successfully saved or not
+    ///https://developer.apple.com/reference/uikit/uialertcontroller
     internal func createScreenShotCompletion(image: UIImage, didFinishSavingWithError: NSError?, contextInfo: UnsafeMutableRawPointer?) {
-        // check if error != nil
         if didFinishSavingWithError != nil {
             print("Error in saving image.")
-            // present appropriate message in UIAlertViewController
-            //https://developer.apple.com/reference/uikit/uialertcontroller
             let alertController = UIAlertController(title: "Failed to save screenshot to photo library", message: nil , preferredStyle: UIAlertControllerStyle.alert)
             present(alertController, animated: true, completion: nil)
             alertController.dismiss(animated: true, completion: nil)
         }
-            // present appropriate message in UIAlertViewController
             print("Image saved.")
             let alertController = UIAlertController(title: "Successfully saved screenshot to photo library", message: nil , preferredStyle: UIAlertControllerStyle.alert)
             let okay = UIAlertAction(title: "Okay", style: .cancel, handler: nil)
@@ -136,6 +131,5 @@ class FoaasViewController: UIViewController {
         
             present(alertController, animated: true, completion: nil)
             alertController.dismiss(animated: true, completion: nil)
-            // double check that the image actually gets saved to the camera roll. Not sure how?
     }    
 }
