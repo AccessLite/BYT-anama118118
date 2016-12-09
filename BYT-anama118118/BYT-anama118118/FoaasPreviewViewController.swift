@@ -17,11 +17,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     
     var foaasOperationSelected: FoaasOperation!
     var foaas: Foaas!
-    
-    // why lazy? Because the compiler doesn't complain
-    lazy var yValue: CGFloat = {
-        return self.view.frame.origin.y
-    }()
+    var foaasPath: FoaasPathBuilder?
     
     @IBOutlet weak var fullOperationPrevieTextView: UITextView!
     
@@ -33,27 +29,20 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var field3TextField: UITextField!
     
     @IBOutlet weak var selectButton: UIBarButtonItem!
-    
     @IBOutlet weak var bottomToKeyboardLayout: NSLayoutConstraint!
-    
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
-    
-    var field1: String = ""
-    var field2: String = ""
-    var field3: String = ""
-    var urlString: String {
-        get {
-            return "http://www.foaas.com\(self.foaasOperationSelected.url)"
-        }
-    }
     
     var editingTextField: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.foaasPath = FoaasPathBuilder(operation: self.foaasOperationSelected)
+        
         self.field1TextField.delegate = self
         self.field2TextField.delegate = self
         self.field3TextField.delegate = self
+        
+        self.hidesBottomBarWhenPushed = true
         
         callApi()
         fieldLabelAndTextFieldSetUP()
@@ -118,24 +107,25 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
+        guard let validFoaasPath = self.foaasPath else { return }
+        guard let validText = textField.text else { return }
+        let keys = validFoaasPath.allKeys()
+        
         switch textField {
         case field1TextField:
-            if field1TextField.text != "" {
-                self.field1 = field1TextField.text!.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlPathAllowed)!
-            }
+            validFoaasPath.update(key: keys[0], value: validText)
+            dump(validFoaasPath.operationFields)
         case field2TextField:
-            if field2TextField.text != "" {
-                self.field2 = field2TextField.text!.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlPathAllowed)!
-            }
+            validFoaasPath.update(key: keys[1], value: validText)
+            dump(validFoaasPath.operationFields!)
         case field3TextField:
-            if field3TextField.text != "" {
-                self.field3 = field3TextField.text!.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlPathAllowed)!
-            }
+            validFoaasPath.update(key: keys[2], value: validText)
+            dump(validFoaasPath.operationFields!)
         default:
             break
         }
-        callApi()
         
+        callApi()
         
         self.navigationItem.hidesBackButton = false
         
@@ -170,18 +160,11 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     }
     
     func callApi() {
-        var replacedValueUrl = self.urlString
-        if self.field1 != "" {
-           replacedValueUrl = replacedValueUrl.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[0].field)", with: self.field1)
-        }
-        if self.field2 != "" {
-           replacedValueUrl = replacedValueUrl.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[1].field)", with: self.field2)
-        }
-        if self.field3 != "" {
-            replacedValueUrl = replacedValueUrl.replacingOccurrences(of: ":\(self.foaasOperationSelected.fields[2].field)", with: self.field3)
-        }
+        guard let validFoaasPath = self.foaasPath else { return }
+        let validUrlString = validFoaasPath.build()
+        let urlBase = "http://www.foaas.com"
         
-        guard let url = URL(string: replacedValueUrl) else { return }
+        guard let url = URL(string: urlBase + validUrlString) else { return }
         FoaasDataManager.shared.requestFoaas(url: url) { (foaas: Foaas?) in
             guard let validFoaas = foaas else { return }
             self.foaas = validFoaas
@@ -198,7 +181,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
                 fromAttribute.addAttribute(NSParagraphStyleAttributeName, value: paragraphStyle, range: range)
                 attributedString.append(fromAttribute)
                 self.fullOperationPrevieTextView.attributedText = attributedString
-                //  self.fullOperationPrevieTextView.text = "\(self.foaas.message)\n\(self.foaas.subtitle)"
+                
                 print(self.fullOperationPrevieTextView.text)
             }
         }
@@ -207,7 +190,6 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     //http://stackoverflow.com/questions/29435620/xcode-storyboard-cant-drag-bar-button-to-toolbar-at-top
     @IBAction func selectBarBottonTapped(_ sender: UIBarButtonItem) {
         let foaasInfo: [String : AnyObject] = self.foaas.toJson()
-        //... add whatever info you'd like to pass along here
         let notificationCenter = NotificationCenter.default
         notificationCenter.post(name: Notification.Name(rawValue: "FoaasObjectDidUpdate"), object: nil, userInfo: [ "info" : foaasInfo ])
         //http://stackoverflow.com/questions/24668818/how-to-dismiss-viewcontroller-in-swift

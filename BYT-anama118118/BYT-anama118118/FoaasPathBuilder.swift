@@ -15,18 +15,18 @@ class FoaasPathBuilder {
     /**
      Flattens an array of [FoaasField] with identical keys, into a one-dimensional array of [String:String] while performing
      a case-insensitive comparison of key-value pairs to store only unique keys.
-     
      - parameter operation: The `FoaasOperation` to use in building a URL path.
      */
     init(operation: FoaasOperation) {
-        //http://stackoverflow.com/questions/35207188/create-dictionary-from-an-array-of-objects-using-property-of-object-as-key-for-t
-        self.operationFields = operation.fields.reduce([String:String]()) { var d = $0; d[$1.name] = $1.field; return d }
+        self.operation = operation
+        var dict: [String:String] = [:]
+        for eachArray in operation.fields {
+                dict[eachArray.name.lowercased()] = eachArray.field.lowercased()
+        }
+        self.operationFields = dict
         
-        //var dict: [String:String] = [:]
-        //for eachArray in operation.fields {
-        //        dict[eachArray.name.lowercased()] = eachArray.field.lowercased()
-        //}
-        //self.operationFields = dict
+        //http://stackoverflow.com/questions/35207188/create-dictionary-from-an-array-of-objects-using-property-of-object-as-key-for-t
+        //self.operationFields = operation.fields.reduce([String:String]()) { var d = $0; d[$1.name] = $1.field; return d }
         
         ///Following does not work but I was hoping I can make it work
         //var dictionary = Dictionary(dictionaryLiteral: operation.fields.map{($0.name, $0.field))
@@ -61,7 +61,10 @@ class FoaasPathBuilder {
      - parameter value: The value to change to.
      */
     func update(key: String, value: String)  {
-        self.operationFields[key] = value
+        print(key,value)
+        self.operationFields.updateValue(value, forKey: key)
+        dump(self.operationFields)
+//        self.operationFields[key] = value
     }
     
     /**
