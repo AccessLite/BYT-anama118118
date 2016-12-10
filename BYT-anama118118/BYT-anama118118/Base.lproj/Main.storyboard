@@ -169,7 +169,7 @@
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="300" id="gKJ-Rl-5At"/>
-                                            <constraint firstAttribute="width" constant="359" id="sl6-I1-WGd"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="359" id="sl6-I1-WGd"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -232,6 +232,7 @@
                                     <constraint firstItem="5kS-Kg-mWi" firstAttribute="leading" secondItem="4r9-5m-d5i" secondAttribute="leading" constant="8" id="mus-kI-e1v"/>
                                     <constraint firstItem="Qwf-4T-ejy" firstAttribute="leading" secondItem="4r9-5m-d5i" secondAttribute="leading" constant="8" id="ps9-Kr-7aj"/>
                                     <constraint firstItem="1jn-pP-sGl" firstAttribute="leading" secondItem="4r9-5m-d5i" secondAttribute="leading" constant="8" id="u5x-vE-Zjs"/>
+                                    <constraint firstItem="5kS-Kg-mWi" firstAttribute="width" secondItem="4r9-5m-d5i" secondAttribute="width" constant="-16" id="ubt-BW-fpq"/>
                                 </constraints>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="ZHe-1j-8b6" appends="YES" id="rrm-j1-J0B"/>
@@ -240,10 +241,11 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="4r9-5m-d5i" firstAttribute="top" secondItem="Vui-ke-XFk" secondAttribute="bottom" id="Hau-qv-sIg"/>
                             <constraint firstItem="4r9-5m-d5i" firstAttribute="leading" secondItem="3YV-KD-DP1" secondAttribute="leadingMargin" constant="-16" id="Obi-5N-yh5"/>
                             <constraint firstAttribute="trailingMargin" secondItem="4r9-5m-d5i" secondAttribute="trailing" constant="-16" id="XQt-S0-JER"/>
-                            <constraint firstItem="4r9-5m-d5i" firstAttribute="top" secondItem="Vui-ke-XFk" secondAttribute="bottom" id="d30-UN-cdY"/>
-                            <constraint firstItem="77F-ZJ-fD3" firstAttribute="top" secondItem="4r9-5m-d5i" secondAttribute="bottom" id="lt1-K5-PiK"/>
+                            <constraint firstItem="77F-ZJ-fD3" firstAttribute="top" secondItem="4r9-5m-d5i" secondAttribute="bottom" constant="-108" id="YL2-Uv-ZSo"/>
+                            <constraint firstItem="4r9-5m-d5i" firstAttribute="width" secondItem="3YV-KD-DP1" secondAttribute="width" id="hGO-f7-DRU"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
@@ -256,7 +258,7 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="bottomToKeyboardLayout" destination="lt1-K5-PiK" id="0UE-W2-KiY"/>
+                        <outlet property="bottomToKeyboardLayout" destination="YL2-Uv-ZSo" id="I6t-Cj-gFA"/>
                         <outlet property="field1Label" destination="2x0-Md-wz8" id="IaP-NK-QnA"/>
                         <outlet property="field1TextField" destination="1WG-Xj-xPc" id="0uM-eE-PSE"/>
                         <outlet property="field2Label" destination="1jn-pP-sGl" id="Ht7-by-hQc"/>

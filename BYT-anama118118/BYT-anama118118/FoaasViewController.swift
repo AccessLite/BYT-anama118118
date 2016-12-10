@@ -86,9 +86,19 @@ class FoaasViewController: UIViewController {
     @IBAction func shareText(_ sender: AnyObject) {
         guard let validFoaas = self.foaas else { return }
         var arrayToShare: [String] = []
-        arrayToShare.append(validFoaas.message)
-        arrayToShare.append(validFoaas.subtitle)
-    
+        var message = validFoaas.message
+        var subtitle = validFoaas.subtitle
+        
+        if self.filterIsOn {
+            message = FoulLanguageFilter.filterFoulLanguage(text: validFoaas.message)
+            subtitle = FoulLanguageFilter.filterFoulLanguage(text: validFoaas.subtitle)
+            arrayToShare.append(message)
+            arrayToShare.append(subtitle)
+        } else {
+            arrayToShare.append(message)
+            arrayToShare.append(subtitle)
+        }
+
         let activityViewController = UIActivityViewController(activityItems: arrayToShare, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view
         
