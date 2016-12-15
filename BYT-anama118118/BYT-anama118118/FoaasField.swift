@@ -24,17 +24,10 @@ class FoaasField: JSONConvertible, CustomStringConvertible {
     }
     
     required init?(json: [String : AnyObject]){
+      // let this initializer fail if its not "name" or "field". the problem is with the API if this doesn't work
         if let name = json["name"] as? String,
             let field = json["field"] as? String {
             self.name = name
-            self.field = field
-        } else if let noun = json["noun"] as? String,
-            let field = json["field"] as? String {
-            self.name = noun
-            self.field = field
-        } else if let from = json["from"] as? String,
-            let field = json ["field"] as? String {
-            self.name = from
             self.field = field
         } else {
             return nil

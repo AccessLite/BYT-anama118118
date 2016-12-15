@@ -24,14 +24,6 @@ class FoaasPathBuilder {
                 dict[eachArray.name.lowercased()] = eachArray.field.lowercased()
         }
         self.operationFields = dict
-        
-        //http://stackoverflow.com/questions/35207188/create-dictionary-from-an-array-of-objects-using-property-of-object-as-key-for-t
-        //self.operationFields = operation.fields.reduce([String:String]()) { var d = $0; d[$1.name] = $1.field; return d }
-        
-        ///Following does not work but I was hoping I can make it work
-        //var dictionary = Dictionary(dictionaryLiteral: operation.fields.map{($0.name, $0.field))
-        //self.operationFields = operation.fields.map{(key,value) in (value.lowercased(), key.lowercased())}
-        //let something = operation.fields.map {$0.name.lowercased(): $0.field.lowercased}
     }
     
     /**
