@@ -23,11 +23,13 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var field2TextField: UITextField!
     @IBOutlet weak var field3Label: UILabel!
     @IBOutlet weak var field3TextField: UITextField!
-    
-    @IBOutlet weak var selectButton: UIBarButtonItem!
     @IBOutlet weak var bottomToKeyboardLayout: NSLayoutConstraint!
+    @IBOutlet weak var selectButton: UIBarButtonItem!
+    
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
     
+    
+    // MARK: - View Lifecycle
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -37,23 +39,18 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         self.field2TextField.delegate = self
         self.field3TextField.delegate = self
         
-        self.hidesBottomBarWhenPushed = true
+        // self.hidesBottomBarWhenPushed = true // why have a bottom bar? is this because of your storyboard settings for this VC?
         
         callApi()
-        fieldLabelAndTextFieldSetUP()
+        fieldLabelAndTextFieldSetUp()
         
-        let notificationCenter = NotificationCenter.default
-        
-        notificationCenter.addObserver(self, selector: #selector(self.UIKeyboardWillShowNotification), name: Notification.Name(rawValue: "UIKeyboardWillShowNotification"), object: nil)
-        
-        notificationCenter.addObserver(self, selector: #selector(self.UIKeyboardWillHideNotification), name: Notification.Name(rawValue: "UIKeyboardWillHideNotification"), object: nil)
-
         //http://stackoverflow.com/questions/32281651/how-to-dismiss-keyboard-when-touching-anywhere-outside-uitextfield-in-swift
         view.addGestureRecognizer(self.tapGestureRecognizer)
     }
 
-    ///Setup textFieldLabels and textFields, show needed ones and hide the ones not needed.
-    func fieldLabelAndTextFieldSetUP() {
+    // make sure your documentation provides helpful info
+    /// Shows textfields as needed based on `FoaasOperation`'s `FoaasFields`
+    func fieldLabelAndTextFieldSetUp() {
         guard let validFoaasPath = foaasPath else { return }
         let keys = validFoaasPath.allKeys()
         self.field1Label.text = "<\(keys[0])>"
@@ -88,16 +85,27 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    ///Update textView when return key on keyboard is pressed
+    
+    // MARK: - Notifications
+    internal func registerForNotifications() {
+        let notificationCenter = NotificationCenter.default
+        
+        notificationCenter.addObserver(self, selector: #selector(keyboardDidAppear(notification:)), name: Notification.Name.UIKeyboardWillShow, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(keyboardWillDisappear(notification:)), name: Notification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    // MARK: - Textfield delegate
+    // existing Apple-defined protocol functions do not need documentation
     func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         textFieldDidEndEditing(textField)
-        let notificationCenter = NotificationCenter.default
-        notificationCenter.post(name: Notification.Name(rawValue: "UIKeyboardWillHideNotification"), object: nil)
         self.view.endEditing(true)
         return true
     }
     
-    ///Update textView and hide keyboard when editing ends
     func textFieldDidEndEditing(_ textField: UITextField) {
         guard let validFoaasPath = self.foaasPath else { return }
         guard let validText = textField.text else { return }
@@ -118,30 +126,29 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         }
         
         callApi()
-        let notificationCenter = NotificationCenter.default
-        notificationCenter.post(name: Notification.Name(rawValue: "UIKeyboardWillHideNotification"), object: nil)
         self.view.endEditing(true)
     }
     
-    ///Show keyboard when editing begins
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        let notificationCenter = NotificationCenter.default
-        notificationCenter.post(name: Notification.Name(rawValue: "UIKeyboardWillShowNotification"), object: nil)
-    }
-
-    func UIKeyboardWillShowNotification() {
-        print("keyboardShow")
-        self.bottomToKeyboardLayout.constant = 300
-        self.view.updateConstraints()
+    
+    // MARK: Keyboard Management
+    // Your management of the keyboard constraints was a decent first-shot, but there is a proper way to do it by checking
+    // UIKeyboardFrameEndUserInfoKey inside of the notification.userInfo. Please look this up for week 3's tasks
+    internal func keyboardDidAppear(notification: Notification) {
+        self.shouldShowKeyboard(show: true, notification: notification, completion: nil)
     }
     
-    func UIKeyboardWillHideNotification() {
-        print("keyboardHide")
-        self.bottomToKeyboardLayout.constant = 125
-        self.view.updateConstraints()
+    internal func keyboardWillDisappear(notification: Notification) {
+        self.shouldShowKeyboard(show: false, notification: notification, completion: nil)
     }
     
-    ///Tap gesture that dismisses keyboard
+    private func shouldShowKeyboard(show: Bool, notification: Notification, completion: ((Bool) -> Void)? ) {
+        if let keyboardFrame = notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? CGRect {
+            bottomToKeyboardLayout.constant = keyboardFrame.size.height * (show ? 1 : -1)
+        }
+    }
+    
+    
+    // the function name is self documenting, no need for anything additional
     @IBAction func tapGestureDismissKeyboard(_ sender: UITapGestureRecognizer) {
         self.view.endEditing(true)
     }
@@ -195,6 +202,10 @@ class FoulLanguageFilter {
     ///Filter foul language of given text with foulWords in a default foulWordsArray
     static func filterFoulLanguage(text: String) -> String {
         var stringToReturn = text
+        
+        // is there really a difference between "fuck", "fuck.", "fuck?", "fuck‽", "fuck-nugget.", "fuckin'", "fucks", "fucks.", "fucks',", "fucking", "fuckity"?
+        // you should just need to check for "fuck". there is unnecessary work being done here
+        // I'd like you to fix this
         let foulWordsArray = ["fuck", "fuck.", "fuck?", "fuck‽", "fuck-nugget.", "fuckin'", "fucks", "fucks.", "fucks',", "fucking", "fuckity", "dick", "dickface.", "dicks", "dicks.", "cock", "cocks", "cocks.", "cocksplat", "asshole" ,"asshole..." , "foxtrot", "dickface", "perkeleen", "vittupää", "crap", "motherfucker", "motherfucker,", "motherfuck", "fucktard", "Dick","Fuck", "Fuck's", "Fucks", "Fucking", "Fuckity", "Fick", "Cock", "Cocks", "Cocksplat", "Asshole", "Foxtrot", "Dickface", "Perkeleen", "Vittupää", "Crap", "Motherfucker", "Motherfuck", "Fucktard", "Fucktard!"]
         
         for f in foulWordsArray {
@@ -211,6 +222,7 @@ class FoulLanguageFilter {
     
     ///Replaces word's first vowel into *
     static func multateFoulLanguage(word: String) -> String {
+        // re-write this and check for the first instance of a character using CharacterSet. then replace it with a * using String range operations
         var muatedString = ""
         var counter = 0
         for character in word.characters {

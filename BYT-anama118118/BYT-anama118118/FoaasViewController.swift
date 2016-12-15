@@ -128,18 +128,23 @@ class FoaasViewController: UIViewController {
     ///Present appropriate Alert by UIAlertViewController, indicating images are successfully saved or not
     ///https://developer.apple.com/reference/uikit/uialertcontroller
     internal func createScreenShotCompletion(image: UIImage, didFinishSavingWithError: NSError?, contextInfo: UnsafeMutableRawPointer?) {
+        
         if didFinishSavingWithError != nil {
             print("Error in saving image.")
             let alertController = UIAlertController(title: "Failed to save screenshot to photo library", message: nil , preferredStyle: UIAlertControllerStyle.alert)
+            let okay = UIAlertAction(title: "Okay", style: .cancel, handler: nil)
+            alertController.addAction(okay)
+            // do not dismiss the alert yourself in code this way! add a button and let the user handle it
             present(alertController, animated: true, completion: nil)
-            alertController.dismiss(animated: true, completion: nil)
         }
+        else {
+        // this has to be in an else clause. because if error is !nil, you're going to be presenting 2x of these alerts
             print("Image saved.")
             let alertController = UIAlertController(title: "Successfully saved screenshot to photo library", message: nil , preferredStyle: UIAlertControllerStyle.alert)
             let okay = UIAlertAction(title: "Okay", style: .cancel, handler: nil)
             alertController.addAction(okay)
-        
+            
             present(alertController, animated: true, completion: nil)
-            alertController.dismiss(animated: true, completion: nil)
-    }    
+        }
+    }
 }
