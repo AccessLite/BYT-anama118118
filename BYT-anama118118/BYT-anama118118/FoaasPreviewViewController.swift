@@ -43,6 +43,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         
         callApi()
         fieldLabelAndTextFieldSetUp()
+        self.registerForNotifications()
         
         //http://stackoverflow.com/questions/32281651/how-to-dismiss-keyboard-when-touching-anywhere-outside-uitextfield-in-swift
         view.addGestureRecognizer(self.tapGestureRecognizer)
