@@ -39,8 +39,6 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         self.field2TextField.delegate = self
         self.field3TextField.delegate = self
         
-        // self.hidesBottomBarWhenPushed = true // why have a bottom bar? is this because of your storyboard settings for this VC?
-        
         callApi()
         fieldLabelAndTextFieldSetUp()
         self.registerForNotifications()
@@ -100,7 +98,6 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     }
 
     // MARK: - Textfield delegate
-    // existing Apple-defined protocol functions do not need documentation
     func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         textFieldDidEndEditing(textField)
         self.view.endEditing(true)
@@ -143,13 +140,12 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func shouldShowKeyboard(show: Bool, notification: Notification, completion: ((Bool) -> Void)? ) {
-        if let keyboardFrame = notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? CGRect {
-            bottomToKeyboardLayout.constant = keyboardFrame.size.height * (show ? 1 : -1)
+        if let keyboardFrame = notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue {
+            bottomToKeyboardLayout.constant = keyboardFrame.cgRectValue.size.height * (show ? 1 : -1)
+            self.view.updateConstraints()
         }
     }
     
-    
-    // the function name is self documenting, no need for anything additional
     @IBAction func tapGestureDismissKeyboard(_ sender: UITapGestureRecognizer) {
         self.view.endEditing(true)
     }
@@ -202,39 +198,62 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
 class FoulLanguageFilter {
     ///Filter foul language of given text with foulWords in a default foulWordsArray
     static func filterFoulLanguage(text: String) -> String {
-        var stringToReturn = text
-        
         // is there really a difference between "fuck", "fuck.", "fuck?", "fuck‽", "fuck-nugget.", "fuckin'", "fucks", "fucks.", "fucks',", "fucking", "fuckity"?
         // you should just need to check for "fuck". there is unnecessary work being done here
         // I'd like you to fix this
-        let foulWordsArray = ["fuck", "fuck.", "fuck?", "fuck‽", "fuck-nugget.", "fuckin'", "fucks", "fucks.", "fucks',", "fucking", "fuckity", "dick", "dickface.", "dicks", "dicks.", "cock", "cocks", "cocks.", "cocksplat", "asshole" ,"asshole..." , "foxtrot", "dickface", "perkeleen", "vittupää", "crap", "motherfucker", "motherfucker,", "motherfuck", "fucktard", "Dick","Fuck", "Fuck's", "Fucks", "Fucking", "Fuckity", "Fick", "Cock", "Cocks", "Cocksplat", "Asshole", "Foxtrot", "Dickface", "Perkeleen", "Vittupää", "Crap", "Motherfucker", "Motherfuck", "Fucktard", "Fucktard!"]
-        
+        let foulWordsArray = Set(["fuck", "dick", "cock", "crap", "asshole", "pussy", "shit", "vittupää", "motherfuck"])
+        var wordsArr = text.components(separatedBy: " ")
         for f in foulWordsArray {
-            let wordsArr = stringToReturn.components(separatedBy: " ")
-            var fString = ""
-            if wordsArr.contains(f) {
-                fString = multateFoulLanguage(word: f)
-                let string = wordsArr.joined(separator: " ")
-                stringToReturn = string.replacingOccurrences(of: f, with: fString)
+            wordsArr = wordsArr.map { (word) -> String in
+                if word.lowercased().hasPrefix(f) || word.lowercased().hasSuffix(f) {
+                    return multateFoulLanguage(word: word)
+                } else {
+                    return word
+                }
             }
         }
-        return stringToReturn
+        let string = wordsArr.joined(separator: " ")
+        return string
     }
     
     ///Replaces word's first vowel into *
     static func multateFoulLanguage(word: String) -> String {
         // re-write this and check for the first instance of a character using CharacterSet. then replace it with a * using String range operations
-        var muatedString = ""
-        var counter = 0
-        for character in word.characters {
-            if (character == "a" || character == "e" || character == "i" || character == "o" || character == "u") && counter == 0 {
-                muatedString += "*"
-                counter += 1
-            } else {
-                muatedString += "\(character)"
+        let vowels = Set(["a","e","i","o","u"])
+        for c in word.lowercased().characters {
+            if vowels.contains(String(c)) {
+                if word.lowercased().hasPrefix("motherfuck") {
+                    return word.replacingOccurrences(of: "u", with: "*")
+                }
+                return word.replacingOccurrences(of: String(c), with: "*")
             }
         }
-        return muatedString
+//        var counter = 0
+//        let filteredWord = word.lowercased().characters.map { (character) -> Character in
+//            if vowels.contains(character) && counter == 0 {
+//                counter += 1
+//                return "*"
+//            } else {
+//                return character
+//            }
+//        }
+        
+//        for character in word.characters {
+//            if vowels.contains(String(character)) && counter <= 2 && word.lowercased().hasPrefix("motherfuck") {
+//                if counter == 2 {
+//                    muatedString += "*"
+//                } else {
+//                    muatedString += "\(character)"
+//                }
+//                counter += 1
+//            } else if vowels.contains(String(character)) && counter == 0 {
+//                muatedString += "*"
+//                counter += 1
+//            } else {
+//                muatedString += "\(character)"
+//            }
+//        }
+        return word
     }
 
 }
