@@ -64,6 +64,5 @@ class FoaasOperationsTableViewController: UITableViewController {
     @IBAction func foulLanguageFilterSwitch(_ sender: UISwitch) {
         self.tableView.reloadData()
     }
-
     
 }
