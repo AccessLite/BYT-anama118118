@@ -32,7 +32,6 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: - View Lifecycle
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         self.foaasPath = FoaasPathBuilder(operation: self.foaasOperationSelected)
         
@@ -98,35 +97,37 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
 
     // MARK: - Textfield delegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool{
-        textFieldDidEndEditing(textField)
         self.view.endEditing(true)
         return true
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        guard let validFoaasPath = self.foaasPath else { return }
-        guard var validText = textField.text else { return }
+        self.view.endEditing(true)
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let validFoaasPath = self.foaasPath else { return false }
+        guard var validText = textField.text else { return false }
         let keys = validFoaasPath.allKeys()
         if textField.text == "" {
             validText = " "
         }
-
+        let updatedString = (validText as NSString).replacingCharacters(in: range, with: string)
         switch textField {
         case field1TextField:
-            validFoaasPath.update(key: keys[0], value: validText)
+            validFoaasPath.update(key: keys[0], value: updatedString)
             dump(validFoaasPath.operationFields)
         case field2TextField:
-            validFoaasPath.update(key: keys[1], value: validText)
+            validFoaasPath.update(key: keys[1], value: updatedString)
             dump(validFoaasPath.operationFields!)
         case field3TextField:
-            validFoaasPath.update(key: keys[2], value: validText)
+            validFoaasPath.update(key: keys[2], value: updatedString)
             dump(validFoaasPath.operationFields!)
         default:
             break
         }
-
         updateAttributedTextInput()
-        self.view.endEditing(true)
+        return true
     }
     
     func updateAttributedTextInput() {
