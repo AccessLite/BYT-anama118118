@@ -14,6 +14,8 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     var foaas: Foaas!
     var foaasPath: FoaasPathBuilder?
     var filterIsOn: Bool = true
+    var previewText: NSString = ""
+    var previewAttributedText: NSAttributedString = NSAttributedString()
     
     @IBOutlet weak var fullOperationPrevieTextView: UITextView!
     
@@ -27,7 +29,6 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var selectButton: UIBarButtonItem!
     
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
-    
     
     // MARK: - View Lifecycle
     override func viewDidLoad() {
@@ -52,7 +53,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     func fieldLabelAndTextFieldSetUp() {
         guard let validFoaasPath = foaasPath else { return }
         let keys = validFoaasPath.allKeys()
-        self.field1Label.text = "<\(keys[0])>"
+        self.field1Label.text = "\(keys[0])"
         field1TextField.placeholder = keys[0]
         
         switch validFoaasPath.operationFields.count {
@@ -67,7 +68,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
             field2TextField.isHidden = false
             field3TextField.isHidden = true
             
-            field2Label.text = "<\(keys[1])>"
+            field2Label.text = "\(keys[1])"
             field2TextField.placeholder = keys[1]
         case 3:
             field2Label.isHidden = false
@@ -75,8 +76,8 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
             field2TextField.isHidden = false
             field3TextField.isHidden = false
             
-            field2Label.text = "<\(keys[1])>"
-            field3Label.text = "<\(keys[2])>"
+            field2Label.text = "\(keys[1])"
+            field3Label.text = "\(keys[2])"
             field2TextField.placeholder = keys[1]
             field3TextField.placeholder = keys[2]
         default:
@@ -84,11 +85,9 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    
     // MARK: - Notifications
     internal func registerForNotifications() {
         let notificationCenter = NotificationCenter.default
-        
         notificationCenter.addObserver(self, selector: #selector(keyboardDidAppear(notification:)), name: Notification.Name.UIKeyboardWillShow, object: nil)
         notificationCenter.addObserver(self, selector: #selector(keyboardWillDisappear(notification:)), name: Notification.Name.UIKeyboardWillHide, object: nil)
     }
@@ -106,9 +105,12 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         guard let validFoaasPath = self.foaasPath else { return }
-        guard let validText = textField.text else { return }
+        guard var validText = textField.text else { return }
         let keys = validFoaasPath.allKeys()
-        
+        if textField.text == "" {
+            validText = " "
+        }
+
         switch textField {
         case field1TextField:
             validFoaasPath.update(key: keys[0], value: validText)
@@ -122,11 +124,25 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         default:
             break
         }
-        
-        callApi()
+
+        updateAttributedTextInput()
         self.view.endEditing(true)
     }
     
+    func updateAttributedTextInput() {
+        if let validFoaasPath = self.foaasPath {
+            let attributedText = NSMutableAttributedString.init(attributedString: self.previewAttributedText)
+            let keys = validFoaasPath.allKeys()
+            for key in keys {
+                let string = attributedText.string as NSString
+                let rangeOfWord = string.range(of: key)
+                let attributedStringToReplace = NSMutableAttributedString(string: validFoaasPath.operationFields[key]!, attributes: [NSUnderlineStyleAttributeName: NSUnderlineStyle.styleSingle.rawValue, NSForegroundColorAttributeName : UIColor.green, NSFontAttributeName : UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium)])
+                attributedText.replaceCharacters(in: rangeOfWord, with: attributedStringToReplace)
+            }
+            self.fullOperationPrevieTextView.attributedText = attributedText
+            print(self.fullOperationPrevieTextView.text)
+        }
+    }
     
     // MARK: Keyboard Management
     // Your management of the keyboard constraints was a decent first-shot, but there is a proper way to do it by checking
@@ -166,7 +182,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
                 subtitle = FoulLanguageFilter.filterFoulLanguage(text: self.foaas.subtitle)
             }
             DispatchQueue.main.async {
-                let attributedString = NSMutableAttributedString(string: message, attributes: [ NSFontAttributeName : UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium) ])
+                let attributedString = NSMutableAttributedString(string: message, attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium) ])
                 let fromAttribute = NSMutableAttributedString(string: "\n\n" + subtitle, attributes: [ NSForegroundColorAttributeName : UIColor.black, NSFontAttributeName : UIFont.systemFont(ofSize: 24, weight: UIFontWeightThin) ])
                 let paragraphStyle = NSMutableParagraphStyle()
                 paragraphStyle.alignment = .right
@@ -178,7 +194,21 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
                 attributedString.append(fromAttribute)
                 
                 self.fullOperationPrevieTextView.attributedText = attributedString
+                self.previewText = self.fullOperationPrevieTextView.attributedText.string as NSString
                 print(self.fullOperationPrevieTextView.text)
+                
+                if let validFoaasPath = self.foaasPath {
+                    let keys = validFoaasPath.allKeys()
+                    for key in keys {
+                        let range = self.previewText.range(of: key)
+                        let attributedStringToReplace = NSMutableAttributedString(string: validFoaasPath.operationFields[key]! , attributes: [NSUnderlineStyleAttributeName: NSUnderlineStyle.styleSingle.rawValue, NSForegroundColorAttributeName : UIColor.green, NSFontAttributeName : UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium)])
+                        let attributedText = NSMutableAttributedString.init(attributedString: self.fullOperationPrevieTextView.attributedText)
+                        attributedText.replaceCharacters(in: range, with: attributedStringToReplace)
+                        self.fullOperationPrevieTextView.attributedText = attributedText
+                        self.previewAttributedText = self.fullOperationPrevieTextView.attributedText
+                        print(self.fullOperationPrevieTextView.text)
+                    }
+                }
             }
         }
     }
@@ -187,20 +217,25 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     ///http://stackoverflow.com/questions/29435620/xcode-storyboard-cant-drag-bar-button-to-toolbar-at-top
     ///http://stackoverflow.com/questions/24668818/how-to-dismiss-viewcontroller-in-swift
     @IBAction func selectBarBottonTapped(_ sender: UIBarButtonItem) {
-        let foaasInfo: [String : AnyObject] = self.foaas.toJson()
-        let notificationCenter = NotificationCenter.default
-        notificationCenter.post(name: Notification.Name(rawValue: "FoaasObjectDidUpdate"), object: nil, userInfo: [ "info" : foaasInfo , "filterStatus": self.filterIsOn])
+        let urlBase = "http://www.foaas.com"
+        let validUrlString = (self.foaasPath?.build())!
+        guard let url = URL(string: urlBase + validUrlString) else { return }
+        FoaasDataManager.shared.requestFoaas(url: url) { (foaas: Foaas?) in
+            guard let validFoaas = foaas else { return }
+            self.foaas = validFoaas
+            DispatchQueue.main.async {
+                let foaasInfo: [String : AnyObject] = self.foaas.toJson()
+                let notificationCenter = NotificationCenter.default
+                notificationCenter.post(name: Notification.Name(rawValue: "FoaasObjectDidUpdate"), object: nil, userInfo: [ "info" : foaasInfo , "filterStatus": self.filterIsOn])
+            }
+        }
         dismiss(animated: true, completion: nil)
     }
-    
 }
 
 class FoulLanguageFilter {
     ///Filter foul language of given text with foulWords in a default foulWordsArray
     static func filterFoulLanguage(text: String) -> String {
-        // is there really a difference between "fuck", "fuck.", "fuck?", "fuck‽", "fuck-nugget.", "fuckin'", "fucks", "fucks.", "fucks',", "fucking", "fuckity"?
-        // you should just need to check for "fuck". there is unnecessary work being done here
-        // I'd like you to fix this
         let foulWordsArray = Set(["fuck", "dick", "cock", "crap", "asshole", "pussy", "shit", "vittupää", "motherfuck"])
         var wordsArr = text.components(separatedBy: " ")
         for f in foulWordsArray {
@@ -218,7 +253,6 @@ class FoulLanguageFilter {
     
     ///Replaces word's first vowel into *
     static func multateFoulLanguage(word: String) -> String {
-        // re-write this and check for the first instance of a character using CharacterSet. then replace it with a * using String range operations
         let vowels = Set(["a","e","i","o","u"])
         for c in word.lowercased().characters {
             if vowels.contains(String(c)) {
@@ -228,32 +262,6 @@ class FoulLanguageFilter {
                 return word.replacingOccurrences(of: String(c), with: "*")
             }
         }
-//        var counter = 0
-//        let filteredWord = word.lowercased().characters.map { (character) -> Character in
-//            if vowels.contains(character) && counter == 0 {
-//                counter += 1
-//                return "*"
-//            } else {
-//                return character
-//            }
-//        }
-        
-//        for character in word.characters {
-//            if vowels.contains(String(character)) && counter <= 2 && word.lowercased().hasPrefix("motherfuck") {
-//                if counter == 2 {
-//                    muatedString += "*"
-//                } else {
-//                    muatedString += "\(character)"
-//                }
-//                counter += 1
-//            } else if vowels.contains(String(character)) && counter == 0 {
-//                muatedString += "*"
-//                counter += 1
-//            } else {
-//                muatedString += "\(character)"
-//            }
-//        }
         return word
     }
-
 }
