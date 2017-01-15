@@ -9,6 +9,8 @@
 import UIKit
 
 class FoaasOperationsTableViewController: UITableViewController {
+    
+    
     static var endPoint = URL(string:"http://www.foaas.com/operations")!
     var endpointForFoaas = URL(string: "http://www.foaas.com/awesome/louis")!
     
@@ -17,10 +19,33 @@ class FoaasOperationsTableViewController: UITableViewController {
     
     var detailFoaasOperationsViewSegue = "detailFoaasOperationsViewSegue"
     
+    var floatingButton: UIButton = UIButton()
+    
     @IBOutlet weak var foulLanguageFilterSwitch: UISwitch!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.floatingButton = UIButton(type: .custom)
+        self.floatingButton.addTarget(self, action: #selector(floatingButtonClicked), for: UIControlEvents.touchUpInside)
+        self.view.addSubview(floatingButton)
+
+    }
+    
+    override func viewWillLayoutSubviews() {
+        floatingButton.clipsToBounds = true
+        floatingButton.setImage(#imageLiteral(resourceName: "Close Button"), for: .normal)
+        
+        floatingButton.translatesAutoresizingMaskIntoConstraints = false
+        let _ = [
+            floatingButton.trailingAnchor.constraint(equalTo: (tableView.superview?.trailingAnchor)!, constant: -24.0),
+            floatingButton.bottomAnchor.constraint(equalTo: (tableView.superview?.bottomAnchor)!, constant: -24.0),
+            floatingButton.widthAnchor.constraint(equalToConstant: 50.0),
+            floatingButton.heightAnchor.constraint(equalToConstant: 54.0)
+            ].map { $0.isActive = true }
+    }
+    
+    func floatingButtonClicked() {
+        dismiss(animated: true, completion: nil)
     }
     
     // MARK: - Table view data source
