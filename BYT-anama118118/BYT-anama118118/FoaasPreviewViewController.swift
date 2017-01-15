@@ -26,6 +26,10 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var field3Label: UILabel!
     @IBOutlet weak var field3TextField: UITextField!
     @IBOutlet weak var bottomToKeyboardLayout: NSLayoutConstraint!
+    @IBOutlet weak var bottonWhiteViewToKeyboardLayout: NSLayoutConstraint!
+    
+    @IBOutlet weak var scrollView: UIScrollView!
+    
     @IBOutlet weak var selectButton: UIBarButtonItem!
     
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
@@ -33,6 +37,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     // MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.isNavigationBarHidden = true
         self.foaasPath = FoaasPathBuilder(operation: self.foaasOperationSelected)
         
         self.field1TextField.delegate = self
@@ -89,11 +94,35 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(keyboardDidAppear(notification:)), name: Notification.Name.UIKeyboardWillShow, object: nil)
         notificationCenter.addObserver(self, selector: #selector(keyboardWillDisappear(notification:)), name: Notification.Name.UIKeyboardWillHide, object: nil)
+        
+        //https://www.hackingwithswift.com/example-code/uikit/how-to-adjust-a-uiscrollview-to-fit-the-keyboard
+        notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: Notification.Name.UIKeyboardWillHide, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: Notification.Name.UIKeyboardWillChangeFrame, object: nil)
+
     }
-    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
+    
+    func adjustForKeyboard(notification: Notification) {
+        let userInfo = notification.userInfo!
+        
+        let keyboardScreenEndFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        let keyboardViewEndFrame = view.convert(keyboardScreenEndFrame, from: view.window)
+        
+        if notification.name == Notification.Name.UIKeyboardWillHide {
+            scrollView.contentInset = UIEdgeInsets.zero
+        } else {
+            scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardViewEndFrame.height, right: 0)
+        }
+        
+        scrollView.scrollIndicatorInsets = scrollView.contentInset
+        
+        //let selectedRange = scrollView.selectedRange
+        //scrollView.scrollRangeToVisible(selectedRange)
+    }
+    
+    
 
     // MARK: - Textfield delegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool{
@@ -158,7 +187,9 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     
     private func shouldShowKeyboard(show: Bool, notification: Notification, completion: ((Bool) -> Void)? ) {
         if let keyboardFrame = notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue {
+            
             bottomToKeyboardLayout.constant = keyboardFrame.cgRectValue.size.height * (show ? 1 : -1)
+            
             self.view.updateConstraints()
         }
     }
@@ -184,7 +215,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
             }
             DispatchQueue.main.async {
                 let attributedString = NSMutableAttributedString(string: message, attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium) ])
-                let fromAttribute = NSMutableAttributedString(string: "\n\n" + subtitle, attributes: [ NSForegroundColorAttributeName : UIColor.black, NSFontAttributeName : UIFont.systemFont(ofSize: 24, weight: UIFontWeightThin) ])
+                let fromAttribute = NSMutableAttributedString(string: "\n\n" + subtitle, attributes: [ NSForegroundColorAttributeName : UIColor.white, NSFontAttributeName : UIFont.systemFont(ofSize: 24, weight: UIFontWeightThin) ])
                 let paragraphStyle = NSMutableParagraphStyle()
                 paragraphStyle.alignment = .right
                 
@@ -218,6 +249,30 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     ///http://stackoverflow.com/questions/29435620/xcode-storyboard-cant-drag-bar-button-to-toolbar-at-top
     ///http://stackoverflow.com/questions/24668818/how-to-dismiss-viewcontroller-in-swift
     @IBAction func selectBarBottonTapped(_ sender: UIBarButtonItem) {
+//        let urlBase = "http://www.foaas.com"
+//        let validUrlString = (self.foaasPath?.build())!
+//        guard let url = URL(string: urlBase + validUrlString) else { return }
+//        FoaasDataManager.shared.requestFoaas(url: url) { (foaas: Foaas?) in
+//            guard let validFoaas = foaas else { return }
+//            self.foaas = validFoaas
+//            DispatchQueue.main.async {
+//                let foaasInfo: [String : AnyObject] = self.foaas.toJson()
+//                let notificationCenter = NotificationCenter.default
+//                notificationCenter.post(name: Notification.Name(rawValue: "FoaasObjectDidUpdate"), object: nil, userInfo: [ "info" : foaasInfo , "filterStatus": self.filterIsOn])
+//            }
+//        }
+//        dismiss(animated: true, completion: nil)
+    }
+    @IBAction func goBackButtonPressed(_ sender: UIButton) {
+        if let navController = self.navigationController {
+            navController.popViewController(animated: true)
+        }
+    }
+    
+    ///Button to send notification to FoaasViewController and dismisses current view controllers
+    ///http://stackoverflow.com/questions/29435620/xcode-storyboard-cant-drag-bar-button-to-toolbar-at-top
+    ///http://stackoverflow.com/questions/24668818/how-to-dismiss-viewcontroller-in-swift
+    @IBAction func addButtonPressed(_ sender: UIButton) {
         let urlBase = "http://www.foaas.com"
         let validUrlString = (self.foaasPath?.build())!
         guard let url = URL(string: urlBase + validUrlString) else { return }
@@ -232,6 +287,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         }
         dismiss(animated: true, completion: nil)
     }
+    
 }
 
 class FoulLanguageFilter {

@@ -8,13 +8,28 @@
 
 import UIKit
 
+protocol PushingViewController {
+    func pushViewController(viewController: UIViewController)
+}
+
 class FoaasViewController: UIViewController {
     
     @IBOutlet weak var mainTextLabel: UILabel!
     @IBOutlet weak var subtitleTextLabel: UILabel!
     @IBOutlet weak var octoButton: UIButton!
+    
+    // Gestures
     @IBOutlet var shareGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet var screenShotLongPressGestureRecognizer: UILongPressGestureRecognizer!
+    @IBOutlet var foaasSettingMenuSlideUpGestureRecognizer: UISwipeGestureRecognizer!
+    @IBOutlet var foaasSettingMenuSlideDownGestureRecognizer: UISwipeGestureRecognizer!
+    
+    // Views
+    @IBOutlet weak var foaasSettingView: FoaasSettingsMenuView!
+    @IBOutlet weak var foaasView: UIView!
+    
+    // Constraints
+    @IBOutlet weak var foaasViewCenterYConstraint: NSLayoutConstraint!
     
     var foaas: Foaas?
     var filterIsOn: Bool = true
@@ -22,7 +37,7 @@ class FoaasViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.registerForNotifications()
-        
+        self.navigationController?.isNavigationBarHidden = true
         FoaasDataManager.shared.requestFoaas(url: FoaasDataManager.foaasURL!) { (foaas: Foaas?) in
             if let validFoaas = foaas {
                 self.foaas = validFoaas
@@ -145,6 +160,29 @@ class FoaasViewController: UIViewController {
             alertController.addAction(okay)
             
             present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    ///https://www.hackingwithswift.com/example-code/uikit/how-to-animate-views-with-spring-damping-using-animatewithduration
+    @IBAction func foaasSettingMenuSlideUpGestureRecognizerDragged(_ sender: UISwipeGestureRecognizer) {
+        if self.foaasView.center.y == self.view.center.y {
+            UIView.animate(withDuration: 1, delay: 1, usingSpringWithDamping: 0.5, initialSpringVelocity: 5, options: UIViewAnimationOptions.curveEaseOut, animations: {
+                self.foaasView.alpha = 1
+            }) { _ in
+                self.foaasViewCenterYConstraint.constant = -(self.foaasSettingView.frame.height)
+                self.view.layoutIfNeeded()
+            }   
+        }
+    }
+    
+    @IBAction func foaasSettingMenuSlideDownGestureRecognizerDragged(_ sender: UISwipeGestureRecognizer) {
+        if self.foaasView.center.y != self.view.center.y {
+            UIView.animate(withDuration: 1, delay: 1, usingSpringWithDamping: 0.5, initialSpringVelocity: 5, options: UIViewAnimationOptions.curveEaseOut, animations: {
+                self.foaasView.alpha = 1
+            }) { _ in
+                self.foaasViewCenterYConstraint.constant = 0
+                self.view.layoutIfNeeded()
+            }
         }
     }
 }
