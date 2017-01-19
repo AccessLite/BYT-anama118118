@@ -30,18 +30,34 @@
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h69-n9-HvS"/>
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h69-n9-HvS">
+                    <connections>
+                        <action selector="profanitySwitchDidChange:" destination="-1" eventType="valueChanged" id="zPI-qV-y15"/>
+                    </connections>
+                </switch>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c1N-eF-95J">
                     <state key="normal" image="FB Icon"/>
+                    <connections>
+                        <action selector="facebookButtonTapped:" destination="-1" eventType="touchUpInside" id="1nJ-On-zDG"/>
+                    </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aLL-Xn-8JS">
                     <state key="normal" image="ic_camera_roll_black_48px"/>
+                    <connections>
+                        <action selector="cameraButtonTapped:" destination="-1" eventType="touchUpInside" id="zeN-ds-Bek"/>
+                    </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2kH-kv-c5O">
                     <state key="normal" image="Twitter_Logo_White_On_Blue"/>
+                    <connections>
+                        <action selector="twitterButtonTapped:" destination="-1" eventType="touchUpInside" id="HZu-Y5-zij"/>
+                    </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zrT-Ig-K5V">
                     <state key="normal" image="ic_file_upload_black_48px"/>
+                    <connections>
+                        <action selector="shareButtonTapped:" destination="-1" eventType="touchUpInside" id="JfY-ro-zYa"/>
+                    </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PROFANITY" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FbX-qF-isL">
                     <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="18"/>

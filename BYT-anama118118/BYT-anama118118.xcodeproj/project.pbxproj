@@ -27,6 +27,7 @@
 		A704A1741E296FB600604129 /* RobotoCondensed-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A704A1621E296FB600604129 /* RobotoCondensed-Regular.ttf */; };
 		A704A17A1E29958C00604129 /* FoaasSettingsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A704A1791E29958C00604129 /* FoaasSettingsMenuView.swift */; };
 		A704A17C1E2997D500604129 /* FoaasSettingsMenuView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A704A17B1E2997D500604129 /* FoaasSettingsMenuView.xib */; };
+		A76300D71E2DE5CD00479AB4 /* FoaasSettingMenuManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76300D61E2DE5CD00479AB4 /* FoaasSettingMenuManager.swift */; };
 		A76312861DE6B98900AF13A7 /* FoaasDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76312851DE6B98900AF13A7 /* FoaasDataManager.swift */; };
 		A76312881DE7C05D00AF13A7 /* Contents.json in Resources */ = {isa = PBXBuildFile; fileRef = A76312871DE7C05D00AF13A7 /* Contents.json */; };
 		A794AFB81DF4F18F00514879 /* FoaasPathBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A794AFB71DF4F18F00514879 /* FoaasPathBuilder.swift */; };
@@ -65,6 +66,7 @@
 		A704A1621E296FB600604129 /* RobotoCondensed-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RobotoCondensed-Regular.ttf"; sourceTree = "<group>"; };
 		A704A1791E29958C00604129 /* FoaasSettingsMenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoaasSettingsMenuView.swift; sourceTree = "<group>"; };
 		A704A17B1E2997D500604129 /* FoaasSettingsMenuView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FoaasSettingsMenuView.xib; sourceTree = "<group>"; };
+		A76300D61E2DE5CD00479AB4 /* FoaasSettingMenuManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoaasSettingMenuManager.swift; sourceTree = "<group>"; };
 		A76312851DE6B98900AF13A7 /* FoaasDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = FoaasDataManager.swift; sourceTree = "<group>"; tabWidth = 4; };
 		A76312871DE7C05D00AF13A7 /* Contents.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Contents.json; sourceTree = "<group>"; };
 		A794AFB71DF4F18F00514879 /* FoaasPathBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoaasPathBuilder.swift; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 			isa = PBXGroup;
 			children = (
 				A794AFB71DF4F18F00514879 /* FoaasPathBuilder.swift */,
+				A76300D61E2DE5CD00479AB4 /* FoaasSettingMenuManager.swift */,
 				A76312851DE6B98900AF13A7 /* FoaasDataManager.swift */,
 				A7D656C41DE56BE1001A5AB7 /* FoaasAPIManager.swift */,
 			);
@@ -293,6 +296,7 @@
 				A7D656C51DE56BE1001A5AB7 /* FoaasAPIManager.swift in Sources */,
 				A7E349101DE954560072FDB8 /* FoaasPreviewViewController.swift in Sources */,
 				A704A17A1E29958C00604129 /* FoaasSettingsMenuView.swift in Sources */,
+				A76300D71E2DE5CD00479AB4 /* FoaasSettingMenuManager.swift in Sources */,
 				A7D656BF1DE56A53001A5AB7 /* FoaasViewController.swift in Sources */,
 				A7D656BB1DE55C62001A5AB7 /* FoaasField.swift in Sources */,
 				A794AFB81DF4F18F00514879 /* FoaasPathBuilder.swift in Sources */,

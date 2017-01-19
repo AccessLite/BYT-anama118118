@@ -13,9 +13,13 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     var foaasOperationSelected: FoaasOperation!
     var foaas: Foaas!
     var foaasPath: FoaasPathBuilder?
-    var filterIsOn: Bool = true
+
+    var foaasSettingMenuDelegate : FoaasSettingMenuDelegate!
+    
     var previewText: NSString = ""
     var previewAttributedText: NSAttributedString = NSAttributedString()
+    
+    
     
     @IBOutlet weak var fullOperationPrevieTextView: UITextView!
     
@@ -29,9 +33,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var bottonWhiteViewToKeyboardLayout: NSLayoutConstraint!
     
     @IBOutlet weak var scrollView: UIScrollView!
-    
     @IBOutlet weak var selectButton: UIBarButtonItem!
-    
     @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
     
     // MARK: - View Lifecycle
@@ -100,6 +102,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: Notification.Name.UIKeyboardWillChangeFrame, object: nil)
 
     }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -115,14 +118,8 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         } else {
             scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardViewEndFrame.height, right: 0)
         }
-        
         scrollView.scrollIndicatorInsets = scrollView.contentInset
-        
-        //let selectedRange = scrollView.selectedRange
-        //scrollView.scrollRangeToVisible(selectedRange)
     }
-    
-    
 
     // MARK: - Textfield delegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool{
@@ -166,7 +163,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
             for key in keys {
                 let string = attributedText.string as NSString
                 let rangeOfWord = string.range(of: key)
-                let attributedStringToReplace = NSMutableAttributedString(string: validFoaasPath.operationFields[key]!, attributes: [NSUnderlineStyleAttributeName: NSUnderlineStyle.styleSingle.rawValue, NSForegroundColorAttributeName : UIColor.green, NSFontAttributeName : UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium)])
+                let attributedStringToReplace = NSMutableAttributedString(string: validFoaasPath.operationFields[key]!, attributes: [NSUnderlineStyleAttributeName: NSUnderlineStyle.styleSingle.rawValue, NSForegroundColorAttributeName : UIColor.green, NSFontAttributeName : UIFont.systemFont(ofSize: 24, weight: UIFontWeightLight)])
                 attributedText.replaceCharacters(in: rangeOfWord, with: attributedStringToReplace)
             }
             self.fullOperationPrevieTextView.attributedText = attributedText
@@ -209,13 +206,13 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
             self.foaas = validFoaas
             var message = self.foaas.message
             var subtitle = self.foaas.subtitle
-            if self.filterIsOn {
+            if self.foaasSettingMenuDelegate.filterIsOn {
                 message = FoulLanguageFilter.filterFoulLanguage(text: self.foaas.message)
                 subtitle = FoulLanguageFilter.filterFoulLanguage(text: self.foaas.subtitle)
             }
             DispatchQueue.main.async {
-                let attributedString = NSMutableAttributedString(string: message, attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium) ])
-                let fromAttribute = NSMutableAttributedString(string: "\n\n" + subtitle, attributes: [ NSForegroundColorAttributeName : UIColor.white, NSFontAttributeName : UIFont.systemFont(ofSize: 24, weight: UIFontWeightThin) ])
+                let attributedString = NSMutableAttributedString(string: message, attributes: [NSForegroundColorAttributeName : UIColor.white, NSFontAttributeName : UIFont.systemFont(ofSize: 24, weight: UIFontWeightLight) ])
+                let fromAttribute = NSMutableAttributedString(string: "\n\n" + "From,\n" + subtitle, attributes: [ NSForegroundColorAttributeName : UIColor.white, NSFontAttributeName : UIFont.systemFont(ofSize: 24, weight: UIFontWeightLight) ])
                 let paragraphStyle = NSMutableParagraphStyle()
                 paragraphStyle.alignment = .right
                 
@@ -233,7 +230,7 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
                     let keys = validFoaasPath.allKeys()
                     for key in keys {
                         let range = self.previewText.range(of: key)
-                        let attributedStringToReplace = NSMutableAttributedString(string: validFoaasPath.operationFields[key]! , attributes: [NSUnderlineStyleAttributeName: NSUnderlineStyle.styleSingle.rawValue, NSForegroundColorAttributeName : UIColor.green, NSFontAttributeName : UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium)])
+                        let attributedStringToReplace = NSMutableAttributedString(string: validFoaasPath.operationFields[key]! , attributes: [NSUnderlineStyleAttributeName: NSUnderlineStyle.styleSingle.rawValue, NSForegroundColorAttributeName : UIColor.green, NSFontAttributeName : UIFont.systemFont(ofSize: 24, weight: UIFontWeightLight)])
                         let attributedText = NSMutableAttributedString.init(attributedString: self.fullOperationPrevieTextView.attributedText)
                         attributedText.replaceCharacters(in: range, with: attributedStringToReplace)
                         self.fullOperationPrevieTextView.attributedText = attributedText
@@ -245,24 +242,6 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    ///Button to send notification to FoaasViewController and dismisses current view controllers
-    ///http://stackoverflow.com/questions/29435620/xcode-storyboard-cant-drag-bar-button-to-toolbar-at-top
-    ///http://stackoverflow.com/questions/24668818/how-to-dismiss-viewcontroller-in-swift
-    @IBAction func selectBarBottonTapped(_ sender: UIBarButtonItem) {
-//        let urlBase = "http://www.foaas.com"
-//        let validUrlString = (self.foaasPath?.build())!
-//        guard let url = URL(string: urlBase + validUrlString) else { return }
-//        FoaasDataManager.shared.requestFoaas(url: url) { (foaas: Foaas?) in
-//            guard let validFoaas = foaas else { return }
-//            self.foaas = validFoaas
-//            DispatchQueue.main.async {
-//                let foaasInfo: [String : AnyObject] = self.foaas.toJson()
-//                let notificationCenter = NotificationCenter.default
-//                notificationCenter.post(name: Notification.Name(rawValue: "FoaasObjectDidUpdate"), object: nil, userInfo: [ "info" : foaasInfo , "filterStatus": self.filterIsOn])
-//            }
-//        }
-//        dismiss(animated: true, completion: nil)
-    }
     @IBAction func goBackButtonPressed(_ sender: UIButton) {
         if let navController = self.navigationController {
             navController.popViewController(animated: true)
@@ -273,19 +252,11 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     ///http://stackoverflow.com/questions/29435620/xcode-storyboard-cant-drag-bar-button-to-toolbar-at-top
     ///http://stackoverflow.com/questions/24668818/how-to-dismiss-viewcontroller-in-swift
     @IBAction func addButtonPressed(_ sender: UIButton) {
-        let urlBase = "http://www.foaas.com"
-        let validUrlString = (self.foaasPath?.build())!
-        guard let url = URL(string: urlBase + validUrlString) else { return }
-        FoaasDataManager.shared.requestFoaas(url: url) { (foaas: Foaas?) in
-            guard let validFoaas = foaas else { return }
-            self.foaas = validFoaas
-            DispatchQueue.main.async {
-                let foaasInfo: [String : AnyObject] = self.foaas.toJson()
-                let notificationCenter = NotificationCenter.default
-                notificationCenter.post(name: Notification.Name(rawValue: "FoaasObjectDidUpdate"), object: nil, userInfo: [ "info" : foaasInfo , "filterStatus": self.filterIsOn])
-            }
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.post(name: Notification.Name(rawValue: "FoaasObjectDidUpdate"), object: nil, userInfo: [ /*"filterStatus": self.filterIsOn,*/ "previewText" : self.fullOperationPrevieTextView.text])
+        if let navVC = navigationController {
+            navVC.popToRootViewController(animated: true)
         }
-        dismiss(animated: true, completion: nil)
     }
     
 }

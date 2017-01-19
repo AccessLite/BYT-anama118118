@@ -10,6 +10,7 @@ import UIKit
 
 class FoaasOperationsTableViewController: UITableViewController {
     
+    var foaasSettingMenuDelegate : FoaasSettingMenuDelegate!
     
     static var endPoint = URL(string:"http://www.foaas.com/operations")!
     var endpointForFoaas = URL(string: "http://www.foaas.com/awesome/louis")!
@@ -21,14 +22,11 @@ class FoaasOperationsTableViewController: UITableViewController {
     
     var floatingButton: UIButton = UIButton()
     
-    @IBOutlet weak var foulLanguageFilterSwitch: UISwitch!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.floatingButton = UIButton(type: .custom)
         self.floatingButton.addTarget(self, action: #selector(floatingButtonClicked), for: UIControlEvents.touchUpInside)
         self.view.addSubview(floatingButton)
-
     }
     
     override func viewWillLayoutSubviews() {
@@ -37,19 +35,20 @@ class FoaasOperationsTableViewController: UITableViewController {
         
         floatingButton.translatesAutoresizingMaskIntoConstraints = false
         let _ = [
-            floatingButton.trailingAnchor.constraint(equalTo: (tableView.superview?.trailingAnchor)!, constant: -24.0),
-            floatingButton.bottomAnchor.constraint(equalTo: (tableView.superview?.bottomAnchor)!, constant: -24.0),
+            floatingButton.trailingAnchor.constraint(equalTo: (tableView.superview?.trailingAnchor)!, constant: -32.0),
+            floatingButton.bottomAnchor.constraint(equalTo: (tableView.superview?.bottomAnchor)!, constant: -48.0),
             floatingButton.widthAnchor.constraint(equalToConstant: 50.0),
             floatingButton.heightAnchor.constraint(equalToConstant: 54.0)
             ].map { $0.isActive = true }
     }
     
     func floatingButtonClicked() {
-        dismiss(animated: true, completion: nil)
+        if let navVC = navigationController {
+            navVC.popToRootViewController(animated: true)
+        }
     }
     
     // MARK: - Table view data source
-    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -61,7 +60,7 @@ class FoaasOperationsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "FoaasOperationCellIdentifier", for: indexPath)
         var text = foaasOperationsArray?[indexPath.row].name
-        if self.foulLanguageFilterSwitch.isOn {
+        if self.foaasSettingMenuDelegate.filterIsOn {
             text = FoulLanguageFilter.filterFoulLanguage(text: (foaasOperationsArray?[indexPath.row].name)!)
         }
         cell.textLabel?.text = text
@@ -75,7 +74,7 @@ class FoaasOperationsTableViewController: UITableViewController {
                 if let indexPath = tableView.indexPath(for: cell) {
                     let foaasOperationSelected = foaasOperationsArray?[indexPath.row]
                     foaasPreviewViewController.foaasOperationSelected = foaasOperationSelected
-                    foaasPreviewViewController.filterIsOn = foulLanguageFilterSwitch.isOn
+                    foaasPreviewViewController.foaasSettingMenuDelegate = self.foaasSettingMenuDelegate
                     dump(foaasOperationSelected)
                 }
             }

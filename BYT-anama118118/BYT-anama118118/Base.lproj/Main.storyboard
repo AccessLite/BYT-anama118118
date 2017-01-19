@@ -35,14 +35,9 @@
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NoF-eD-Mdv" userLabel="FoaasView">
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" layoutMarginsFollowReadableWidth="YES" text="Main Text Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="30" translatesAutoresizingMaskIntoConstraints="NO" id="t1I-oA-fDt">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" layoutMarginsFollowReadableWidth="YES" text="Main Text Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.25" translatesAutoresizingMaskIntoConstraints="NO" id="t1I-oA-fDt">
                                         <fontDescription key="fontDescription" name="Roboto-Light" family="Roboto" pointSize="56"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="From,\n Name Label" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="24" translatesAutoresizingMaskIntoConstraints="NO" id="gxO-bp-hOa">
-                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="34"/>
-                                        <nil key="textColor"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cmg-1t-Av9">
@@ -53,7 +48,7 @@
                                         <state key="normal" image="Add Button"/>
                                         <connections>
                                             <action selector="octoButtonTapped:" destination="P8w-17-Sk1" eventType="touchDown" id="yU1-yp-Oiz"/>
-                                            <segue destination="3QU-Qa-a8O" kind="modal" identifier="foaasOperationsTableViewControllerSegue" id="Suc-J7-DrE"/>
+                                            <segue destination="feB-ik-oAL" kind="show" identifier="foaasOperationsTableViewControllerSegue" id="MiZ-bh-H2t"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dZ7-Mr-Dah">
@@ -68,17 +63,13 @@
                                 <color key="backgroundColor" red="0.50196081400000003" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="dZ7-Mr-Dah" secondAttribute="bottom" constant="8" id="2te-WF-rt5"/>
-                                    <constraint firstAttribute="bottom" secondItem="cmg-1t-Av9" secondAttribute="bottom" constant="24" id="3Ca-hE-K9e"/>
-                                    <constraint firstItem="gxO-bp-hOa" firstAttribute="leading" secondItem="NoF-eD-Mdv" secondAttribute="leading" constant="8" id="Ek8-zt-nCY"/>
-                                    <constraint firstItem="t1I-oA-fDt" firstAttribute="height" secondItem="NoF-eD-Mdv" secondAttribute="height" multiplier="0.7" id="FOd-ia-Eeb"/>
-                                    <constraint firstItem="gxO-bp-hOa" firstAttribute="height" secondItem="NoF-eD-Mdv" secondAttribute="height" multiplier="0.15" id="IWd-1t-k4X"/>
+                                    <constraint firstAttribute="bottom" secondItem="cmg-1t-Av9" secondAttribute="bottom" constant="48" id="3Ca-hE-K9e"/>
+                                    <constraint firstItem="t1I-oA-fDt" firstAttribute="height" secondItem="NoF-eD-Mdv" secondAttribute="height" multiplier="0.85" id="FOd-ia-Eeb"/>
                                     <constraint firstItem="dZ7-Mr-Dah" firstAttribute="centerX" secondItem="NoF-eD-Mdv" secondAttribute="centerX" id="SRY-fN-3Xh"/>
-                                    <constraint firstAttribute="trailing" secondItem="gxO-bp-hOa" secondAttribute="trailing" constant="8" id="bUU-gO-NVf"/>
-                                    <constraint firstItem="t1I-oA-fDt" firstAttribute="leading" secondItem="NoF-eD-Mdv" secondAttribute="leading" constant="8" id="cd2-tp-Pob"/>
-                                    <constraint firstItem="gxO-bp-hOa" firstAttribute="top" secondItem="t1I-oA-fDt" secondAttribute="bottom" id="dMN-DS-WHx"/>
-                                    <constraint firstItem="t1I-oA-fDt" firstAttribute="top" secondItem="NoF-eD-Mdv" secondAttribute="top" constant="8" id="eI6-dj-nyY"/>
-                                    <constraint firstAttribute="trailing" secondItem="t1I-oA-fDt" secondAttribute="trailing" constant="8" id="nHE-YL-Rk3"/>
-                                    <constraint firstAttribute="trailing" secondItem="cmg-1t-Av9" secondAttribute="trailing" constant="24" id="ny9-55-sK1"/>
+                                    <constraint firstItem="t1I-oA-fDt" firstAttribute="leading" secondItem="NoF-eD-Mdv" secondAttribute="leading" constant="16" id="cd2-tp-Pob"/>
+                                    <constraint firstItem="t1I-oA-fDt" firstAttribute="top" secondItem="NoF-eD-Mdv" secondAttribute="top" constant="16" id="eI6-dj-nyY"/>
+                                    <constraint firstAttribute="trailing" secondItem="t1I-oA-fDt" secondAttribute="trailing" constant="16" id="nHE-YL-Rk3"/>
+                                    <constraint firstAttribute="trailing" secondItem="cmg-1t-Av9" secondAttribute="trailing" constant="32" id="ny9-55-sK1"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -110,7 +101,6 @@
                         <outlet property="octoButton" destination="cmg-1t-Av9" id="tWj-IS-lat"/>
                         <outlet property="screenShotLongPressGestureRecognizer" destination="chT-8z-sAk" id="t9u-ET-Un7"/>
                         <outlet property="shareGestureRecognizer" destination="PuW-W1-1yY" id="iW0-HM-pxT"/>
-                        <outlet property="subtitleTextLabel" destination="gxO-bp-hOa" id="nc8-Mb-Cp1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="l32-xN-EXw" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -153,15 +143,16 @@
                                     <frame key="frameInset" width="375" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0KJ-0X-cd3">
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0KJ-0X-cd3">
                                             <frame key="frameInset" minX="15" width="345" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="34"/>
-                                            <nil key="textColor"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" red="0.50196081400000003" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
                                     <segue destination="0mW-40-DSw" kind="show" identifier="detailFoaasOperationsViewSegue" id="wOp-Cb-HNP"/>
                                 </connections>
@@ -188,9 +179,6 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                    <connections>
-                        <outlet property="foulLanguageFilterSwitch" destination="pzB-JM-0fx" id="Z3U-Hd-WLJ"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OsM-dM-4Tb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -330,11 +318,7 @@
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Field Of Fucks" id="yUg-ur-kGn">
-                        <barButtonItem key="rightBarButtonItem" title="Select" id="LQt-fu-GXt">
-                            <connections>
-                                <action selector="selectBarBottonTapped:" destination="0mW-40-DSw" id="7F9-KE-DEn"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Select" id="LQt-fu-GXt"/>
                     </navigationItem>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -359,24 +343,6 @@
                 </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="3988" y="-54.422788605697157"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="Tp7-cW-Lyd">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="3QU-Qa-a8O" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="gko-Xh-vMe">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="feB-ik-oAL" kind="relationship" relationship="rootViewController" id="vZ6-xm-dR5"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="5L0-a1-MMq" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2148" y="-52.623688155922046"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="YEF-Se-Xn7">

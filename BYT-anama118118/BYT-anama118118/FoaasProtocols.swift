@@ -21,3 +21,13 @@ protocol DataConvertible {
     init?(data: Data)
     func toData() throws -> Data
 }
+
+protocol FoaasSettingMenuDelegate {
+    func profanitfySwitchChanged()
+    func twitterButtonTapped()
+    func facebookButtonTapped()
+    func camerarollButtonTapped()
+    func shareButtonTapped()
+    var filterIsOn: Bool { get set }
+    func uploadData()
+}
