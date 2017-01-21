@@ -169,8 +169,8 @@
 			isa = PBXGroup;
 			children = (
 				A7D656BE1DE56A53001A5AB7 /* FoaasViewController.swift */,
-				A7D656C01DE56A7F001A5AB7 /* FoaasOperationsTableViewController.swift */,
 				A7E3490F1DE954560072FDB8 /* FoaasPreviewViewController.swift */,
+				A7D656C01DE56A7F001A5AB7 /* FoaasOperationsTableViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";

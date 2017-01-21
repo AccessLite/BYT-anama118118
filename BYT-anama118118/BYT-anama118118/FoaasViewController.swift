@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FoaasViewController: UIViewController, FoaasSettingMenuDelegate {
+class FoaasViewController: UIViewController, FoaasSettingMenuDelegate, UIScrollViewDelegate {
     
     // Objects
     @IBOutlet weak var mainTextLabel: UILabel!
@@ -24,6 +24,7 @@ class FoaasViewController: UIViewController, FoaasSettingMenuDelegate {
     // Views
     @IBOutlet weak var foaasSettingView: FoaasSettingsMenuView!
     @IBOutlet weak var foaasView: UIView!
+    var pageIndex = 0
     
     // Constraints
     @IBOutlet weak var foaasViewCenterYConstraint: NSLayoutConstraint!
@@ -239,6 +240,10 @@ class FoaasViewController: UIViewController, FoaasSettingMenuDelegate {
         }
     }
     
+    func colorSwitcherScrollViewScrolled(color: UIColor) {
+        self.foaasView.backgroundColor = color
+    }
+    
     func profanitfySwitchChanged() {
         print("switch changed")
         var message = self.unfilteredMessage
@@ -261,17 +266,43 @@ class FoaasViewController: UIViewController, FoaasSettingMenuDelegate {
         self.mainTextLabel.adjustsFontSizeToFitWidth = true
         self.mainTextLabel.lineBreakMode = .byTruncatingTail
     }
+    
     func twitterButtonTapped() {
         print("twitter button tapped")
     }
+    
     func facebookButtonTapped() {
         print("facebook button tapped")
     }
+    
     func camerarollButtonTapped() {
         print("cameraroll button tapped")
+        guard let vaidImage = getScreenShotImage(view: self.view) else { return }
+        //https://developer.apple.com/reference/uikit/1619125-uiimagewritetosavedphotosalbum
+        UIImageWriteToSavedPhotosAlbum(vaidImage, self, #selector(createScreenShotCompletion(image: didFinishSavingWithError: contextInfo:)), nil)
     }
+    
     func shareButtonTapped() {
         print("share button tapped")
+        guard let validFoaas = self.foaas else { return }
+        var arrayToShare: [String] = []
+        var message = validFoaas.message
+        var subtitle = validFoaas.subtitle
+        
+        if self.filterIsOn {
+            message = FoulLanguageFilter.filterFoulLanguage(text: validFoaas.message)
+            subtitle = FoulLanguageFilter.filterFoulLanguage(text: validFoaas.subtitle)
+            arrayToShare.append(message)
+            arrayToShare.append(subtitle)
+        } else {
+            arrayToShare.append(message)
+            arrayToShare.append(subtitle)
+        }
+        
+        let activityViewController = UIActivityViewController(activityItems: arrayToShare, applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        
+        self.present(activityViewController, animated: true, completion: nil)
     }
     
 }

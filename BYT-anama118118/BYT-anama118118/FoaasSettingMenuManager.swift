@@ -31,6 +31,10 @@ class FoaasSettingMenuManager: FoaasSettingMenuDelegate {
     func shareButtonTapped(){
         
     }
+    
+    func colorSwitcherScrollViewScrolled(color: UIColor) {
+        
+    }
 }
 
 extension UIFont {

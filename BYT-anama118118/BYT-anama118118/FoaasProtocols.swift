@@ -23,6 +23,7 @@ protocol DataConvertible {
 }
 
 protocol FoaasSettingMenuDelegate {
+    func colorSwitcherScrollViewScrolled(color: UIColor)
     func profanitfySwitchChanged()
     func twitterButtonTapped()
     func facebookButtonTapped()
