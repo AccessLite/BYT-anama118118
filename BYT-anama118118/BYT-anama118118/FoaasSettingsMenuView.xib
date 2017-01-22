@@ -88,7 +88,7 @@
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DDL-df-fLs">
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="PAw-fl-wgL"/>
-                        <constraint firstAttribute="width" constant="120" id="l0C-D0-oAo"/>
+                        <constraint firstAttribute="width" constant="115" id="l0C-D0-oAo"/>
                     </constraints>
                 </scrollView>
             </subviews>

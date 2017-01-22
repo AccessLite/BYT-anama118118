@@ -38,8 +38,6 @@ class FoaasSettingsMenuView: UIView, UIScrollViewDelegate {
             self.colorSwitcherScrollView.addSubview(self.view1)
             self.colorSwitcherScrollView.addSubview(self.view2)
             self.colorSwitcherScrollView.addSubview(self.view3)
-            
-            
         }
     }
 
@@ -67,17 +65,10 @@ class FoaasSettingsMenuView: UIView, UIScrollViewDelegate {
         }else if Int(currentPage) == 2{
             print("\(currentPage) is 2")
             self.delegate?.colorSwitcherScrollViewScrolled(color: self.view3.backgroundColor!)
-        }else if Int(currentPage) == 3{
-                print("\(currentPage) is 3")
-        }else if Int(currentPage) == 4{
-                print("\(currentPage) is 4")
-        }else if Int(currentPage) == 5{
-                print("\(currentPage) is 5")
         }else{
              print("\(currentPage) is others")
         }
     }
-
     
     @IBAction func profanitySwitchDidChange(_ sender: UISwitch) {
         self.delegate?.profanitfySwitchChanged()

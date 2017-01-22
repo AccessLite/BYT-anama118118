@@ -68,4 +68,16 @@ class FoaasDataManager {
             operations(data)
         }
     }
+    
+    internal func requestColorSchemeData(endpoint: String, _ operations: @escaping (Data?) -> Void) {
+        FoaasAPIManager.getData(endpoint: endpoint) { (data: Data?) in
+            operations(data)
+        }
+    }
+    
+    internal func requestVersionData(endpoint: String, _ operations: @escaping (Data?) -> Void) {
+        FoaasAPIManager.getData(endpoint: endpoint) { (data: Data?) in
+            operations(data)
+        }
+    }
 }

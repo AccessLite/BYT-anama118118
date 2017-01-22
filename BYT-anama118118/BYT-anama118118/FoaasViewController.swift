@@ -41,6 +41,8 @@ class FoaasViewController: UIViewController, FoaasSettingMenuDelegate, UIScrollV
     }
     
     var unfilteredMessage: String = ""
+    var colorScheme = [ColorScheme]()
+    var versions = [Version]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,6 +80,26 @@ class FoaasViewController: UIViewController, FoaasSettingMenuDelegate, UIScrollV
                 }
             }
         }
+        
+        FoaasDataManager.shared.requestColorSchemeData(endpoint: FoaasAPIManager.colorSchemeURL) { (data: Data?) in
+            guard let validData = data else { return }
+            dump(validData)
+            guard let colorScheme = ColorScheme.parseColorSchemes(from: validData) else { return }
+            DispatchQueue.main.async {
+                self.colorScheme = colorScheme
+            }
+        }
+        
+        FoaasDataManager.shared.requestVersionData(endpoint: FoaasAPIManager.versionURL) { (data: Data?) in
+            guard let validData = data else { return }
+            dump(validData)
+            guard let version = Version.parseVersion(from: validData) else { return }
+            DispatchQueue.main.async {
+                self.versions = version
+                dump(version)
+            }
+        }
+        
         self.view.addGestureRecognizer(self.shareGestureRecognizer)
     }
     
@@ -304,5 +326,4 @@ class FoaasViewController: UIViewController, FoaasSettingMenuDelegate, UIScrollV
         
         self.present(activityViewController, animated: true, completion: nil)
     }
-    
 }

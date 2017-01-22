@@ -19,8 +19,6 @@ class FoaasPreviewViewController: UIViewController, UITextFieldDelegate {
     var previewText: NSString = ""
     var previewAttributedText: NSAttributedString = NSAttributedString()
     
-    
-    
     @IBOutlet weak var fullOperationPrevieTextView: UITextView!
     
     @IBOutlet weak var field1Label: UILabel!
