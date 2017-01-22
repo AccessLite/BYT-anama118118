@@ -14,6 +14,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FoaasSettingsMenuView" customModule="BYT_anama118118" customModuleProvider="target">
             <connections>
                 <outlet property="cameraRollButton" destination="aLL-Xn-8JS" id="7yF-Mc-7YG"/>
+                <outlet property="colorSwitcherScrollView" destination="DDL-df-fLs" id="3oS-em-L77"/>
                 <outlet property="facebookButton" destination="c1N-eF-95J" id="bdi-os-m8T"/>
                 <outlet property="profanitySwitch" destination="h69-n9-HvS" id="GTX-pl-q3r"/>
                 <outlet property="shareImageButton" destination="zrT-Ig-K5V" id="UDI-bP-1Ai"/>
@@ -30,31 +31,40 @@
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h69-n9-HvS"/>
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h69-n9-HvS">
+                    <connections>
+                        <action selector="profanitySwitchDidChange:" destination="-1" eventType="valueChanged" id="zPI-qV-y15"/>
+                    </connections>
+                </switch>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c1N-eF-95J">
                     <state key="normal" image="FB Icon"/>
+                    <connections>
+                        <action selector="facebookButtonTapped:" destination="-1" eventType="touchUpInside" id="1nJ-On-zDG"/>
+                    </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aLL-Xn-8JS">
                     <state key="normal" image="ic_camera_roll_black_48px"/>
+                    <connections>
+                        <action selector="cameraButtonTapped:" destination="-1" eventType="touchUpInside" id="zeN-ds-Bek"/>
+                    </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2kH-kv-c5O">
                     <state key="normal" image="Twitter_Logo_White_On_Blue"/>
+                    <connections>
+                        <action selector="twitterButtonTapped:" destination="-1" eventType="touchUpInside" id="HZu-Y5-zij"/>
+                    </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zrT-Ig-K5V">
                     <state key="normal" image="ic_file_upload_black_48px"/>
+                    <connections>
+                        <action selector="shareButtonTapped:" destination="-1" eventType="touchUpInside" id="JfY-ro-zYa"/>
+                    </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PROFANITY" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FbX-qF-isL">
                     <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="18"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CZ5-9g-9vt">
-                    <color key="backgroundColor" red="0.40000000600000002" green="1" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="193" id="RBT-z2-Hea"/>
-                        <constraint firstAttribute="height" constant="30" id="awu-uh-5Bk"/>
-                    </constraints>
-                </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="OFF" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WOh-Vg-BPO">
                     <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="14"/>
                     <color key="textColor" white="0.0" alpha="0.86610991380000002" colorSpace="calibratedWhite"/>
@@ -75,31 +85,37 @@
                     <color key="textColor" white="0.0" alpha="0.33984375000689648" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DDL-df-fLs">
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="PAw-fl-wgL"/>
+                        <constraint firstAttribute="width" constant="115" id="l0C-D0-oAo"/>
+                    </constraints>
+                </scrollView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="h69-n9-HvS" firstAttribute="centerX" secondItem="CZ5-9g-9vt" secondAttribute="centerX" id="3v0-Yk-7FA"/>
+                <constraint firstAttribute="trailing" secondItem="DDL-df-fLs" secondAttribute="trailing" constant="16" id="0EA-AM-ifM"/>
                 <constraint firstItem="TLS-aI-lB7" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="6jA-Ob-VjX"/>
-                <constraint firstItem="aLL-Xn-8JS" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="7o4-x4-cN1"/>
+                <constraint firstItem="aLL-Xn-8JS" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="20" id="7o4-x4-cN1"/>
                 <constraint firstItem="zrT-Ig-K5V" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" constant="-125" id="BWm-tS-b1z"/>
-                <constraint firstItem="CZ5-9g-9vt" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="16" id="BZL-0F-ell"/>
-                <constraint firstItem="c1N-eF-95J" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="EZ0-uH-ofO"/>
-                <constraint firstItem="zrT-Ig-K5V" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="EnH-KP-jpO"/>
+                <constraint firstItem="WOh-Vg-BPO" firstAttribute="centerY" secondItem="h69-n9-HvS" secondAttribute="centerY" id="DX2-eD-hTg"/>
+                <constraint firstItem="c1N-eF-95J" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="20" id="EZ0-uH-ofO"/>
+                <constraint firstItem="zrT-Ig-K5V" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="20" id="EnH-KP-jpO"/>
                 <constraint firstItem="Skc-aN-L6p" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="Hr1-Ic-otr"/>
                 <constraint firstAttribute="bottom" secondItem="Ez2-UF-cwo" secondAttribute="bottom" constant="8" id="NEc-JJ-AC5"/>
-                <constraint firstItem="WOh-Vg-BPO" firstAttribute="top" secondItem="CZ5-9g-9vt" secondAttribute="bottom" constant="16" id="NiB-cF-IIA"/>
+                <constraint firstItem="yQD-dg-Bjf" firstAttribute="centerY" secondItem="h69-n9-HvS" secondAttribute="centerY" id="NI5-3X-YR9"/>
                 <constraint firstItem="h69-n9-HvS" firstAttribute="leading" secondItem="WOh-Vg-BPO" secondAttribute="trailing" constant="17" id="Qmu-AQ-rtY"/>
-                <constraint firstItem="h69-n9-HvS" firstAttribute="top" secondItem="CZ5-9g-9vt" secondAttribute="bottom" constant="16" id="QtH-jf-LP2"/>
                 <constraint firstItem="c1N-eF-95J" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" constant="50" id="Tvr-Uc-HWV"/>
-                <constraint firstItem="FbX-qF-isL" firstAttribute="top" secondItem="Skc-aN-L6p" secondAttribute="bottom" constant="16" id="UzG-kt-DkA"/>
                 <constraint firstItem="Ez2-UF-cwo" firstAttribute="top" secondItem="TLS-aI-lB7" secondAttribute="bottom" constant="8" id="X1s-au-rZg"/>
-                <constraint firstAttribute="trailing" secondItem="CZ5-9g-9vt" secondAttribute="trailing" constant="16" id="Xs5-Cw-IgX"/>
                 <constraint firstItem="yQD-dg-Bjf" firstAttribute="leading" secondItem="h69-n9-HvS" secondAttribute="trailing" constant="14" id="YwZ-0a-BuQ"/>
-                <constraint firstItem="Skc-aN-L6p" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="16" id="eX3-li-QZE"/>
-                <constraint firstItem="2kH-kv-c5O" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="j9a-Tx-cu8"/>
+                <constraint firstItem="FbX-qF-isL" firstAttribute="top" secondItem="Skc-aN-L6p" secondAttribute="bottom" constant="25" id="Zi0-70-K4f"/>
+                <constraint firstItem="DDL-df-fLs" firstAttribute="centerY" secondItem="Skc-aN-L6p" secondAttribute="centerY" id="aVr-Eo-0f8"/>
+                <constraint firstAttribute="trailing" secondItem="yQD-dg-Bjf" secondAttribute="trailing" constant="10" id="dyG-gR-4Wy"/>
+                <constraint firstItem="2kH-kv-c5O" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="20" id="j9a-Tx-cu8"/>
+                <constraint firstItem="h69-n9-HvS" firstAttribute="centerY" secondItem="FbX-qF-isL" secondAttribute="centerY" id="mdc-GD-vNv"/>
+                <constraint firstItem="DDL-df-fLs" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="16" id="pJz-BF-4fb"/>
                 <constraint firstItem="Ez2-UF-cwo" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="tfn-ZO-eUZ"/>
                 <constraint firstItem="FbX-qF-isL" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="ukO-KN-ZIu"/>
-                <constraint firstItem="yQD-dg-Bjf" firstAttribute="top" secondItem="CZ5-9g-9vt" secondAttribute="bottom" constant="16" id="urR-h0-GxN"/>
                 <constraint firstItem="2kH-kv-c5O" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" constant="125" id="vi0-Nh-oMe"/>
                 <constraint firstItem="aLL-Xn-8JS" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" constant="-50" id="yeM-Ec-KVT"/>
             </constraints>

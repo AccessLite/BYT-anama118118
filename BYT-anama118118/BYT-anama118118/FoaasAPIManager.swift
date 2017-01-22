@@ -15,6 +15,8 @@ class FoaasAPIManager {
     private static let defaultSession = URLSession(configuration: .default)
     private static let operationsURL = URL(string: "https://www.foaas.com/operations")!
     static let foaasURL = URL(string: "http://www.foaas.com/awesome/Someone")
+    static let colorSchemeURL = "https://api.fieldbook.com/v1/5873aaf1bc9912030079d388/color_schemes"
+    static let versionURL = "https://api.fieldbook.com/v1/5873aaf1bc9912030079d388/version"
     
     internal class func getFoaas(url: URL, completion: @escaping (Foaas?)->Void) {
         //http://www.foaas.com/awesome/louis
@@ -80,4 +82,6 @@ class FoaasAPIManager {
             }
             }.resume()
     }
+    
+    
 }
